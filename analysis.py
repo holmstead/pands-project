@@ -21,3 +21,7 @@ print(df.dtypes)
 with open('variables_summary.txt', 'w') as f:
     # write to textfile
     f.write('test')
+
+# plot a histogram of the array
+hist = df.plot.hist(column=["sepal_length"], edgecolor='black')
+plt.show()
