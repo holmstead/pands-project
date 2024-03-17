@@ -30,5 +30,7 @@ plt.xlabel('Value')
 plt.ylabel('Frequency')
 plt.title('Histogram of Sepal Length')
 
+# save plot as png
+plt.savefig("test.png")
 # show the plot
 plt.show()
