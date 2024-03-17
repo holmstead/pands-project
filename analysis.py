@@ -24,4 +24,11 @@ with open('variables_summary.txt', 'w') as f:
 
 # plot a histogram of the array
 hist = df.plot.hist(column=["sepal_length"], edgecolor='black')
+
+# decorate the plot
+plt.xlabel('Value')
+plt.ylabel('Frequency')
+plt.title('Histogram of Sepal Length')
+
+# show the plot
 plt.show()
