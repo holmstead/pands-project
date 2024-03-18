@@ -2,6 +2,8 @@
 
 Contains an analysis of the Iris dataset.[1]
 
+![flowers](https://www.w3resource.com/w3r_images/iris_flower_dataset.png)
+
 ## Requirements
 - pandas
 - matplotlib
