@@ -22,7 +22,7 @@ with open('variables_summary.txt', 'w') as f:
     # write to textfile
     f.write('test')
 
-# plot a histogram of the array
+# plot a histogram of the specified variable in the df
 hist = df.plot.hist(column=["sepal_length"], edgecolor='black')
 
 # decorate the plot
@@ -32,5 +32,20 @@ plt.title('Histogram of Sepal Length')
 
 # save plot as png
 plt.savefig("test.png")
-# show the plot
+
+# display the plot
+plt.show()
+
+# now a scatterplot
+# https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
+x = df.sepal_length
+y = df.sepal_width
+plt.scatter(x, y)
+
+# decorate the plot
+plt.xlabel('sepal_length')
+plt.ylabel('sepal_width')
+#plt.title('Scatterplot of ... ')
+
+# display the plot
 plt.show()
