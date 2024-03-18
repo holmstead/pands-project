@@ -1,9 +1,10 @@
 # author MHolmes
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import os    # for checking if directory exists
-import seaborn as sns
+import pandas as pd             # for data analyis
+import matplotlib.pyplot as plt # for plotting
+import os                       # checking if directory exists
+import seaborn as sns           # more plotting
+
 
 # load local csv into a pandas dataframe [1]
 df = pd.read_csv("iris.csv")
@@ -14,9 +15,14 @@ print(df)
 # view datatypes
 print(df.dtypes) 
 
+# print a statistical summary of the dataframe
+print(df.describe())
+
 # view headers
 print(df.columns.tolist())
 
+
+# define functions
 def summarize_variables(df):
     '''
     This function generates a text file containing a summary
@@ -50,20 +56,25 @@ def plot_hist(variable):
     # create a directory for plots if it doenst exist [2]
     os.makedirs("plots", exist_ok=True)
 
+    # set up the canvas to have subplots
+    # (N, n) sets how many subplots: N row, n columns
+    fig, ax = plt.subplots(1, 1) 
+
     # plot a histogram of the specified variable in the df
     #hist = df.plot.hist(column=["sepal_length"], edgecolor='black')
-    plt.hist(df[variable], edgecolor="black")
+    ax.hist(df[variable], edgecolor="black")
 
     # decorate the plot
-    plt.xlabel("Value")
-    plt.ylabel("Frequency")
-    plt.title(f"Histogram of {variable}")
+    ax.set_xlabel("Value")
+    ax.set_ylabel("Frequency")
+    ax.set_title(f"Histogram of {variable}")
 
     # save plot as png
-    plt.savefig(f"plots/Histogram of {variable}.png")
+    ax.get_figure().savefig(f"plots/Histogram of {variable}.png")
+    #ax.savefig(f"plots/Histogram of {variable}.png")
 
-    # display the plot
-    #plt.show()
+    # display the whole figure
+    plt.show()
 
 
 def plot_scatter(var1, var2):
@@ -74,22 +85,26 @@ def plot_scatter(var1, var2):
     # creat a directory for plots if it doenst exist:
     os.makedirs("plots", exist_ok=True)
 
+    # set up the canvas to have subplots
+    # (N, n) sets how many subplots: N row, n columns
+    fig, ax = plt.subplots(1, 1) 
+
     # now a scatterplot [3]
     # 
     x = df[var1]
     y = df[var2]
-    plt.scatter(x, y)
+    ax.scatter(x, y)
 
     # decorate the plot
-    plt.xlabel(var1)
-    plt.ylabel(var2)
-    #plt.title('Scatterplot of ... ')
+    ax.set_xlabel(var1)
+    ax.set_ylabel(var2)
+    ax.set_title("Iris Dataset")
 
     # save plot as png
-    plt.savefig(f"plots/{var1} vs {var2}.png")
+    ax.get_figure().savefig(f"plots/{var1} vs {var2}.png")
 
-    # display the plot
-    #plt.show()
+    # display the whole figure
+    plt.show()
 
 
 # call functions
@@ -98,20 +113,21 @@ plot_scatter("sepal_length", "sepal_width")
 summarize_variables(df)
 
 # plot a grid of scatter plots using seaborn [4]
-sns.pairplot(df)
-plt.show()
+pairplot = sns.pairplot(df, hue="species")
+plt.savefig(f"plots/pairplot.png")
+#plt.show()
 
 
 '''
 References:
 
-[1] https://ocw.mit.edu/courses/15-097-prediction-machine-learning-and-statistics-spring-2012/resources/iris/
-    https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/0e7a9b0a5d22642a06d3d5b9bcbad9890c8ee534/iris.csv
+[1] https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv
 
 [2] https://www.w3schools.com/python/ref_os_makedirs.asp
 
 [3] https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
 
-[4] https://seaborn.pydata.org/generated/seaborn.pairplot.html
+[4] Pairplot plots "pairwise relationships in a dataset." 
+https://seaborn.pydata.org/generated/seaborn.pairplot.html
 
 '''
