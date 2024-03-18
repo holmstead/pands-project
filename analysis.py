@@ -23,7 +23,7 @@ with open('variables_summary.txt', 'w') as f:
     f.write('test')
 
 # plot a histogram of the specified variable in the df
-hist = df.plot.hist(column=["sepal_length"], edgecolor='black')
+plt.hist(df["sepal_length"], edgecolor='black')
 
 # decorate the plot
 plt.xlabel('Value')
@@ -31,7 +31,7 @@ plt.ylabel('Frequency')
 plt.title('Histogram of Sepal Length')
 
 # save plot as png
-plt.savefig("test.png")
+plt.savefig("histogram.png")
 
 # display the plot
 plt.show()
@@ -46,6 +46,9 @@ plt.scatter(x, y)
 plt.xlabel('sepal_length')
 plt.ylabel('sepal_width')
 #plt.title('Scatterplot of ... ')
+
+# save plot as png
+plt.savefig("scatter.png")
 
 # display the plot
 plt.show()
