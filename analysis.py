@@ -22,6 +22,7 @@ with open("variables_summary.txt", "w") as f:
     # write to textfile
     f.write("test")
 
+
 def plot_hist(variable):
     '''
     This function plots a histogram from a given variable
@@ -42,24 +43,30 @@ def plot_hist(variable):
     # display the plot
     plt.show()
 
+
+def plot_scatter(var1, var2):
+    '''
+    This function plots a scatterplot from a two given 
+    variables in a pandas dataframe
+    '''
+    # now a scatterplot
+    # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
+    x = df[var1]
+    y = df[var2]
+    plt.scatter(x, y)
+
+    # decorate the plot
+    plt.xlabel(var1)
+    plt.ylabel(var2)
+    #plt.title('Scatterplot of ... ')
+
+    # save plot as png
+    plt.savefig(f"{var1} vs {var2}.png")
+
+    # display the plot
+    plt.show()
+
+
+# call functions
 plot_hist("sepal_length")
-
-
-
-
-# now a scatterplot
-# https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
-x = df.sepal_length
-y = df.sepal_width
-plt.scatter(x, y)
-
-# decorate the plot
-plt.xlabel("sepal_length")
-plt.ylabel("sepal_width")
-#plt.title('Scatterplot of ... ')
-
-# save plot as png
-plt.savefig("scatter.png")
-
-# display the plot
-plt.show()
+plot_scatter("sepal_length", "sepal_width")
