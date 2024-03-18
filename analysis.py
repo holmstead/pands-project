@@ -2,6 +2,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import os    # for checking if directory exists
 #import seaborn as sb
 
 # load local csv into a pandas dataframe
@@ -36,6 +37,10 @@ def plot_hist(variable):
     This function plots a histogram from a given variable
     in a pandas dataframe
     '''
+    # creat a directory for plots if it doenst exist:
+    # https://www.w3schools.com/python/ref_os_makedirs.asp
+    os.makedirs("plots", exist_ok=True)
+
     # plot a histogram of the specified variable in the df
     #hist = df.plot.hist(column=["sepal_length"], edgecolor='black')
     plt.hist(df[variable], edgecolor="black")
@@ -46,7 +51,7 @@ def plot_hist(variable):
     plt.title(f"Histogram of {variable}")
 
     # save plot as png
-    plt.savefig(f"Histogram of {variable}.png")
+    plt.savefig(f"plots/Histogram of {variable}.png")
 
     # display the plot
     plt.show()
@@ -57,6 +62,9 @@ def plot_scatter(var1, var2):
     This function plots a scatterplot from a two given 
     variables in a pandas dataframe
     '''
+    # creat a directory for plots if it doenst exist:
+    os.makedirs("plots", exist_ok=True)
+
     # now a scatterplot
     # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
     x = df[var1]
@@ -69,7 +77,7 @@ def plot_scatter(var1, var2):
     #plt.title('Scatterplot of ... ')
 
     # save plot as png
-    plt.savefig(f"{var1} vs {var2}.png")
+    plt.savefig(f"plots/{var1} vs {var2}.png")
 
     # display the plot
     plt.show()
