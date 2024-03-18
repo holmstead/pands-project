@@ -3,7 +3,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os    # for checking if directory exists
-#import seaborn as sb
+import seaborn as sns
 
 # load local csv into a pandas dataframe [1]
 df = pd.read_csv("iris.csv")
@@ -15,7 +15,7 @@ print(df)
 print(df.dtypes) 
 
 # view headers
-print(df.head)
+print(df.columns.tolist())
 
 def summarize_variables(df):
     '''
@@ -26,6 +26,10 @@ def summarize_variables(df):
 
     # list of variables
     variables = ["sepal_length", "sepal_width", "petal_length", "petal_width"]
+
+    # use pandas to generate list of variables from df headers
+    #variables = df.columns.tolist()
+    print(variables)
 
     # create and open text file
     with open("variables_summary.txt", "w") as f:
@@ -59,7 +63,7 @@ def plot_hist(variable):
     plt.savefig(f"plots/Histogram of {variable}.png")
 
     # display the plot
-    plt.show()
+    #plt.show()
 
 
 def plot_scatter(var1, var2):
@@ -85,13 +89,17 @@ def plot_scatter(var1, var2):
     plt.savefig(f"plots/{var1} vs {var2}.png")
 
     # display the plot
-    plt.show()
+    #plt.show()
 
 
 # call functions
 plot_hist("sepal_length")
 plot_scatter("sepal_length", "sepal_width")
 summarize_variables(df)
+
+# plot a grid of scatter plots using seaborn [4]
+sns.pairplot(df)
+plt.show()
 
 
 '''
@@ -103,5 +111,7 @@ References:
 [2] https://www.w3schools.com/python/ref_os_makedirs.asp
 
 [3] https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
+
+[4] https://seaborn.pydata.org/generated/seaborn.pairplot.html
 
 '''
