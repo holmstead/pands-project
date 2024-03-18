@@ -1,8 +1,10 @@
 # Programming and Scripting Project 2024
 
-Contains an analysis of the Iris dataset.[1]
+Contains an analysis of the Iris dataset.[1.0]
 
-![flowers](https://www.w3resource.com/w3r_images/iris_flower_dataset.png)
+![flowers](https://miro.medium.com/v2/resize:fit:720/format:webp/1*YYiQed4kj_EZ2qfg_imDWA.png)
+
+Iris flowers [1.1]
 
 ## Requirements
 - pandas
@@ -35,6 +37,8 @@ Better formatted source found here:
 
 ## References
 
-[1] https://archive.ics.uci.edu/dataset/53/iris
+[1.0] https://archive.ics.uci.edu/dataset/53/iris
+
+[1.1] https://peaceadegbite1.medium.com/iris-flower-classification-60790e9718a1
 
 [2] - https://en.wikipedia.org/wiki/Iris_flower_data_set
