@@ -2,7 +2,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sb
+#import seaborn as sb
 
 # load local csv into a pandas dataframe
 # source:
@@ -18,23 +18,34 @@ print(df)
 print(df.dtypes) 
 
 # creat and open textfile
-with open('variables_summary.txt', 'w') as f:
+with open("variables_summary.txt", "w") as f:
     # write to textfile
-    f.write('test')
+    f.write("test")
 
-# plot a histogram of the specified variable in the df
-plt.hist(df["sepal_length"], edgecolor='black')
+def plot_hist(variable):
+    '''
+    This function plots a histogram from a given variable
+    in a pandas dataframe
+    '''
+    # plot a histogram of the specified variable in the df
+    #hist = df.plot.hist(column=["sepal_length"], edgecolor='black')
+    plt.hist(df[variable], edgecolor="black")
 
-# decorate the plot
-plt.xlabel('Value')
-plt.ylabel('Frequency')
-plt.title('Histogram of Sepal Length')
+    # decorate the plot
+    plt.xlabel("Value")
+    plt.ylabel("Frequency")
+    plt.title(f"Histogram of {variable}")
 
-# save plot as png
-plt.savefig("histogram.png")
+    # save plot as png
+    plt.savefig(f"Histogram of {variable}.png")
 
-# display the plot
-plt.show()
+    # display the plot
+    plt.show()
+
+plot_hist("sepal_length")
+
+
+
 
 # now a scatterplot
 # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
@@ -43,8 +54,8 @@ y = df.sepal_width
 plt.scatter(x, y)
 
 # decorate the plot
-plt.xlabel('sepal_length')
-plt.ylabel('sepal_width')
+plt.xlabel("sepal_length")
+plt.ylabel("sepal_width")
 #plt.title('Scatterplot of ... ')
 
 # save plot as png
