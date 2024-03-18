@@ -20,7 +20,9 @@ print(df.dtypes)
 # creat and open textfile
 with open("variables_summary.txt", "w") as f:
     # write to textfile
-    f.write("test")
+    f.write(f"variable, mean, standard_deviation, max, min\n")
+    f.write(f"{'sepal_length'}, {df['sepal_length'].mean()}, {df['sepal_length'].std()}, {df['sepal_length'].max()}, {df['sepal_length'].min()}\n")
+    f.write(f"sepal_width, test, test, test")
 
 
 def plot_hist(variable):
