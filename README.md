@@ -1,10 +1,10 @@
-# pands-project
+# Programming and Scripting Project 2024
 
-Contains an analysis of the Iris dataset.
+Contains an analysis of the Iris dataset.[1]
 
 ## Requirements
 - pandas
-- matplotlib.pyplot
+- matplotlib
 
 ## Usage
 
@@ -12,9 +12,11 @@ Contains an analysis of the Iris dataset.
 
 ## About 
 
+Data collected by Edgar Anderson, made famous by Ronald Fisher.[2]
+
 Iris dataset source:
 
-- https://ocw.mit.edu/courses/15-097-prediction-machine-learning-and-statistics-spring-2012/resources/iris/
+- https://archive.ics.uci.edu/dataset/53/iris
 
 Better formatted source found here:    
  
@@ -31,4 +33,6 @@ Better formatted source found here:
 
 ## References
 
- - https://en.wikipedia.org/wiki/Iris_flower_data_set
+[1] https://archive.ics.uci.edu/dataset/53/iris
+
+[2] - https://en.wikipedia.org/wiki/Iris_flower_data_set
