@@ -4,19 +4,21 @@ import pandas as pd             # for data analyis
 import matplotlib.pyplot as plt # for plotting
 import os                       # checking if directory exists
 import seaborn as sns           # more plotting
+import sys
 
 
 # load local csv into a pandas dataframe [1]
+#df = pd.read_csv(sys.argv[1])
 df = pd.read_csv("iris.csv")
 
 # print head and tail of the dataframe
 print(df) 
 
 # view datatypes
-print(df.dtypes) 
+#print(df.dtypes) 
 
 # print a statistical summary of the dataframe
-print(df.describe())
+#print(df.describe())
 
 # view headers
 print(df.columns.tolist())
@@ -35,7 +37,15 @@ def summarize_variables(df):
 
     # use pandas to generate list of variables from df headers
     #variables = df.columns.tolist()
-    print(variables)
+    #print(variables)
+
+    # get numeric only columns
+    numeric_df = df.select_dtypes(include='number')
+    print(numeric_df.columns.tolist())
+
+    for var in numeric_df:
+        print(var)
+    
 
     # create and open text file
     with open("variables_summary.txt", "w") as f:
@@ -43,7 +53,7 @@ def summarize_variables(df):
         f.write(f"variable, mean, standard_deviation, max, min\n")
 
         # create loop to cycle through variables
-        for var in variables:
+        for var in numeric_df:
             # write stats for each variable to the text file
             f.write(f"{var}, {df[var].mean()}, {df[var].std()}, {df[var].max()}, {df[var].min()}\n")
 
@@ -56,7 +66,7 @@ def plot_hist(variable):
     # create a directory for plots if it doenst exist [2]
     os.makedirs("plots", exist_ok=True)
 
-    # set up the canvas to have subplots
+    # set up the canvas
     # (N, n) sets how many subplots: N row, n columns
     fig, ax = plt.subplots(1, 1) 
 
@@ -74,7 +84,7 @@ def plot_hist(variable):
     #ax.savefig(f"plots/Histogram of {variable}.png")
 
     # display the whole figure
-    plt.show()
+    #plt.show()
 
 
 def plot_scatter(var1, var2):
@@ -104,7 +114,7 @@ def plot_scatter(var1, var2):
     ax.get_figure().savefig(f"plots/{var1} vs {var2}.png")
 
     # display the whole figure
-    plt.show()
+    #plt.show()
 
 
 # call functions
@@ -113,8 +123,9 @@ plot_scatter("sepal_length", "sepal_width")
 summarize_variables(df)
 
 # plot a grid of scatter plots using seaborn [4]
-pairplot = sns.pairplot(df, hue="species")
-plt.savefig(f"plots/pairplot.png")
+fig, ax = plt.subplots(1, 1) 
+ax = sns.pairplot(df, hue="species")
+ax.savefig(f"plots/pairplot.png")
 #plt.show()
 
 
