@@ -7,25 +7,8 @@ import seaborn as sns           # more plotting
 import sys
 
 
-# load local csv into a pandas dataframe [1]
-#df = pd.read_csv(sys.argv[1])
-df = pd.read_csv("iris.csv")
-
-# print head and tail of the dataframe
-print(df) 
-
-# view datatypes
-#print(df.dtypes) 
-
-# print a statistical summary of the dataframe
-#print(df.describe())
-
-# view headers
-print(df.columns.tolist())
-
-
 # define functions
-def summarize_variables(df):
+def summarize_variables(numeric_df):
     '''
     This function generates a text file containing a summary
     (mean, std dev, max, min) of each of the variables in 
@@ -33,19 +16,7 @@ def summarize_variables(df):
     '''
 
     # list of variables
-    variables = ["sepal_length", "sepal_width", "petal_length", "petal_width"]
-
-    # use pandas to generate list of variables from df headers
-    #variables = df.columns.tolist()
-    #print(variables)
-
-    # get numeric only columns
-    numeric_df = df.select_dtypes(include='number')
-    print(numeric_df.columns.tolist())
-
-    for var in numeric_df:
-        print(var)
-    
+    #variables = ["sepal_length", "sepal_width", "petal_length", "petal_width"]
 
     # create and open text file
     with open("variables_summary.txt", "w") as f:
@@ -117,16 +88,53 @@ def plot_scatter(var1, var2):
     #plt.show()
 
 
-# call functions
-plot_hist("sepal_length")
-plot_scatter("sepal_length", "sepal_width")
-summarize_variables(df)
+if __name__ == "__main__":
+    # load local csv into a pandas dataframe [1]
+    #df = pd.read_csv(sys.argv[1])
+    df = pd.read_csv("iris.csv")
 
-# plot a grid of scatter plots using seaborn [4]
-fig, ax = plt.subplots(1, 1) 
-ax = sns.pairplot(df, hue="species")
-ax.savefig(f"plots/pairplot.png")
-#plt.show()
+    # print head and tail of the dataframe
+    print(df) 
+
+    # view datatypes
+    #print(df.dtypes) 
+
+    # print a statistical summary of the dataframe
+    #print(df.describe())
+
+    # view headers
+    print(df.columns.tolist())
+
+    # get numeric only columns
+    numeric_df = df.select_dtypes(include='number')
+    print(numeric_df.columns.tolist())
+
+    # check which columns we have in numeric_df
+    #for var in numeric_df:
+        #print(var)
+
+
+    # create loop to cycle through variables
+    for var1 in numeric_df:
+        #print(var)
+        #plot_hist(var)
+        for var2 in numeric_df:
+            # check if variable names match from both loops
+            if var1 == var2:
+                print(f"Not plotting {var1} against {var2}")
+                #skip this loop in the for loop if the two variable names match
+                continue
+            # if they dont match, then they get plotted against each other
+            plot_scatter(var1, var2)
+    
+    # call the function that summariz each of the variables
+    summarize_variables(numeric_df)
+
+    # plot a grid of scatter plots using seaborn [4]
+    fig, ax = plt.subplots(1, 1) 
+    ax = sns.pairplot(df, hue="species")
+    ax.savefig(f"plots/pairplot.png")
+    #plt.show()
 
 
 '''
