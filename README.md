@@ -22,7 +22,14 @@ The datset used in this analysis can be found here:
 
 This program reads in a dataset (csv) and plots histograms, scatterplots, and summarizes numerical variables (mean, standard deviation, max, min).
 
-This program can be used to analyse any dataset in csv form.
+This program can be used to analyse any dataset in csv form. It will:
+
+    - plot histograms of every numeric variable using matplotlib
+    - plot scatterplots of every pair of numeric variables using matplotlib
+    - plot lmplots using seaborn of every pair of numeric variables, with a 'hue' of every non-numeric variable in the datset
+
+This will create a lot of plots in the 'plots' directory. You can then weed out the plots that you dont need or like.
+
 
 ## Quickstart
 
