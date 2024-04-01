@@ -34,9 +34,7 @@ def plot_hist(variable):
     This function plots a histogram from a given variable
     in a pandas dataframe
     '''
-    # create a directory for plots if it doenst exist [2]
-    os.makedirs("plots", exist_ok=True)
-
+    
     # set up the canvas
     # (N, n) sets how many subplots: N row, n columns
     fig, ax = plt.subplots(1, 1) 
@@ -57,15 +55,16 @@ def plot_hist(variable):
     # display the whole figure
     #plt.show()
 
+    # close figures
+    plt.close()
+
 
 def plot_scatter(var1, var2):
     '''
     This function plots a scatterplot from a two given 
     variables in a pandas dataframe
     '''
-    # creat a directory for plots if it doenst exist:
-    os.makedirs("plots", exist_ok=True)
-
+    
     # set up the canvas to have subplots
     # (N, n) sets how many subplots: N row, n columns
     fig, ax = plt.subplots(1, 1) 
@@ -79,7 +78,7 @@ def plot_scatter(var1, var2):
     # decorate the plot
     ax.set_xlabel(var1)
     ax.set_ylabel(var2)
-    ax.set_title("Iris Dataset")
+    #ax.set_title("Iris Dataset")
 
     # save plot as png
     ax.get_figure().savefig(f"plots/{var1} vs {var2}.png")
@@ -87,13 +86,38 @@ def plot_scatter(var1, var2):
     # display the whole figure
     #plt.show()
 
+    # close figures
+    plt.close()
+
+def lm_scatter(df, var1, var2, hue="species"):
+    '''
+    https://seaborn.pydata.org/generated/seaborn.lmplot.html
+    '''
+    # set up variables
+    x = df[var1]
+    y = df[var2]
+
+    # scatter plot using lmplot()
+    #print(f"lmplot {var1}, {var2}")
+    sns.lmplot(data=df, x=var1, y=var2, hue=hue)
+
+    # save plot as png
+    plt.savefig(f"plots/{var1} vs {var2}.png")
+
+    # display the whole figure
+    #plt.show()
+
+    # close figures
+    plt.close()
+    
 
 if __name__ == "__main__":
     # load local csv into a pandas dataframe [1]
     #df = pd.read_csv(sys.argv[1])
-    df = pd.read_csv("iris.csv")
+    df = pd.read_csv(sys.argv[1])
 
     # print head and tail of the dataframe
+    print(f"\nDataframe head and tail:")
     print(df) 
 
     # view datatypes
@@ -103,21 +127,28 @@ if __name__ == "__main__":
     #print(df.describe())
 
     # view headers
+    print(f"\nHeaders")
     print(df.columns.tolist())
 
     # get numeric only columns
     numeric_df = df.select_dtypes(include='number')
+    print(f"\nNumeric only headers:")
     print(numeric_df.columns.tolist())
-
     # check which columns we have in numeric_df
-    #for var in numeric_df:
-        #print(var)
+    print(f"\nLooping through columns in numeric_df:")
+    for var in numeric_df:
+        print(var)
 
+    # call the function that summariz each of the variables
+    summarize_variables(numeric_df)
+
+    # creat a directory for plots if it doenst exist:
+    os.makedirs("plots", exist_ok=True)
 
     # create loop to cycle through variables
     for var1 in numeric_df:
-        #print(var)
-        #plot_hist(var)
+        #print(var1)
+        plot_hist(var1)
         for var2 in numeric_df:
             # check if variable names match from both loops
             if var1 == var2:
@@ -126,15 +157,18 @@ if __name__ == "__main__":
                 continue
             # if they dont match, then they get plotted against each other
             plot_scatter(var1, var2)
+            #sns.lmplot(df, x=var1, y=var2)
+            lm_scatter(df, var1, var2)
     
-    # call the function that summariz each of the variables
-    summarize_variables(numeric_df)
 
     # plot a grid of scatter plots using seaborn [4]
     fig, ax = plt.subplots(1, 1) 
     ax = sns.pairplot(df, hue="species")
     ax.savefig(f"plots/pairplot.png")
     #plt.show()
+
+    # end
+    print(f"Analysis complete.")
 
 
 '''
