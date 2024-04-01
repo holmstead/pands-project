@@ -17,19 +17,30 @@ The datset used in this analysis can be found here:
  
  - https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv
 
-## Get Started
 
-1. Install `pandas`
+## About
 
-2. Install `matplotlib`
+This program reads in a dataset (csv) and plots histograms, scatterplots, and summarizes numerical variables (mean, standard deviation, max, min).
 
-3. Install `seaborn`
+This program can be used to analyse any dataset in csv form.
 
-Then execute the following set of commands:
+## Quickstart
+
+Install stuff:
 
 ```
+python pip install pandas matplotlib seaborn os
 git clone https://github.com/holmstead/pands-project.git
+
 ```
+Run the program:
+
+```
+python analysis.py example_dataset.csv
+```
+
+
+## Get Started
 
 Requirements:
 
@@ -39,25 +50,23 @@ Requirements:
 - seaborn
 - os
 
-Python is a general purpose programming language. The Python interperter can be downloaded [here](https://www.python.org/downloads/). Once intstalled run the following command:
+Python is a general purpose programming language. The Python interperter can be downloaded [here](https://www.python.org/downloads/).
+
+1. Install `pandas`
+    - https://pandas.pydata.org/
+
+2. Install `matplotlib`
+    - https://matplotlib.org/
+
+3. Install `seaborn`
+    - https://seaborn.pydata.org/
+
+
+Once everything is installed, run the follwoing command in the console: 
 
 ```
-python pip install pandas matplotlib seaborn os
+python analysis.py example_dataset.csv
 ```
-
-Usage:
-```
-python analysis.py
-```
-
-## Contents
-
-|      | Files         |
-|-----:|---------------|
-|     1| README.md     | 
-|     1| iris.csv      |
-|     2| analysis.py   |
-|     3| .gitignore.py |
 
 
 ##  Contribute
