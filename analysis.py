@@ -111,6 +111,16 @@ def lm_scatter(df, var1, var2, hue):
     plt.close()
     
 
+def create_pairplot(df, hue):
+    # plot a grid of scatter plots using seaborn [4]
+    fig, ax = plt.subplots(1, 1) 
+    ax = sns.pairplot(df, hue=hue)
+    ax.savefig(f"plots/pairplot_{hue}.png")
+    #plt.show()
+
+    # close figures
+    plt.close()
+
 if __name__ == "__main__":
     # load local csv into a pandas dataframe [1]
     #df = pd.read_csv(sys.argv[1])
@@ -151,31 +161,31 @@ if __name__ == "__main__":
 
     # create loop to cycle through variables
     for var1 in numeric_df:
-        #print(var1)
+        print(f"\nPlotting histogram of {var1}")
         plot_hist(var1)
         for var2 in numeric_df:
             # check if variable names match from both loops
             if var1 == var2:
-                print(f"Not plotting {var1} against {var2}")
+                print(f"\nNot plotting {var1} against {var2}")
                 #skip this loop in the for loop if the two variable names match
                 continue
+            print(f"\nScatter plotting {var1} v {var2}")
             # if they dont match, then they get plotted against each other
             plot_scatter(var1, var2)
 
+            
             for hue in non_numeric_df:
-                print(f"Hue: {hue}")
+                print(f"Plotting lmplot of {var1} v {var2} with hue={hue}")
                 # lmplot() using seaborn
                 lm_scatter(df, var1, var2, hue)
     
-
-    # plot a grid of scatter plots using seaborn [4]
-    fig, ax = plt.subplots(1, 1) 
-    ax = sns.pairplot(df, hue="species")
-    ax.savefig(f"plots/pairplot.png")
-    #plt.show()
+              
+    for hue in non_numeric_df:
+        print(f"\nCreating pairplot with hue={hue}") 
+        create_pairplot(df, hue)
 
     # end
-    print(f"Analysis complete.")
+    print(f"\nAnalysis complete.")
 
 
 '''
