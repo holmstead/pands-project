@@ -81,7 +81,7 @@ def plot_scatter(var1, var2):
     #ax.set_title("Iris Dataset")
 
     # save plot as png
-    ax.get_figure().savefig(f"plots/{var1} vs {var2}.png")
+    ax.get_figure().savefig(f"plots/{var1} vs {var2}_scatter.png")
 
     # display the whole figure
     #plt.show()
@@ -89,7 +89,7 @@ def plot_scatter(var1, var2):
     # close figures
     plt.close()
 
-def lm_scatter(df, var1, var2, hue="species"):
+def lm_scatter(df, var1, var2, hue):
     '''
     https://seaborn.pydata.org/generated/seaborn.lmplot.html
     '''
@@ -102,7 +102,7 @@ def lm_scatter(df, var1, var2, hue="species"):
     sns.lmplot(data=df, x=var1, y=var2, hue=hue)
 
     # save plot as png
-    plt.savefig(f"plots/{var1} vs {var2}.png")
+    plt.savefig(f"plots/{var1} vs {var2}_lmplot_{hue}.png")
 
     # display the whole figure
     #plt.show()
@@ -130,10 +130,14 @@ if __name__ == "__main__":
     print(f"\nHeaders")
     print(df.columns.tolist())
 
-    # get numeric only columns
+    # determine numeric and non-numeric columns
     numeric_df = df.select_dtypes(include='number')
     print(f"\nNumeric only headers:")
     print(numeric_df.columns.tolist())
+    non_numeric_df = df.select_dtypes(exclude='number')
+    print(f"\nNon-numeric headers:")
+    print(non_numeric_df.columns.tolist())
+
     # check which columns we have in numeric_df
     print(f"\nLooping through columns in numeric_df:")
     for var in numeric_df:
@@ -157,8 +161,11 @@ if __name__ == "__main__":
                 continue
             # if they dont match, then they get plotted against each other
             plot_scatter(var1, var2)
-            #sns.lmplot(df, x=var1, y=var2)
-            lm_scatter(df, var1, var2)
+
+            for hue in non_numeric_df:
+                print(f"Hue: {hue}")
+                # lmplot() using seaborn
+                lm_scatter(df, var1, var2, hue)
     
 
     # plot a grid of scatter plots using seaborn [4]
