@@ -121,9 +121,19 @@ def create_pairplot(df, hue):
     # close figures
     plt.close()
 
+
+def create_heatmap(df): 
+    # plot a heatmap using seaborn [a]
+    fig, ax = plt.subplots(1, 1) 
+    ax = sns.heatmap(df.corr(numeric_only=True), annot=True)
+    plt.savefig(f"plots/heatmap.png")
+    #plt.show()
+
+    # close figures
+    plt.close()
+
 if __name__ == "__main__":
     # load local csv into a pandas dataframe [1]
-    #df = pd.read_csv(sys.argv[1])
     df = pd.read_csv(sys.argv[1])
 
     # print head and tail of the dataframe
@@ -131,10 +141,10 @@ if __name__ == "__main__":
     print(df) 
 
     # view datatypes
-    #print(df.dtypes) 
+    print(df.dtypes) 
 
     # print a statistical summary of the dataframe
-    #print(df.describe())
+    print(df.describe())
 
     # view headers
     print(f"\nHeaders")
@@ -162,7 +172,7 @@ if __name__ == "__main__":
     # create loop to cycle through variables
     for var1 in numeric_df:
         print(f"\nPlotting histogram of {var1}")
-        plot_hist(var1)
+        #plot_hist(var1)
         for var2 in numeric_df:
             # check if variable names match from both loops
             if var1 == var2:
@@ -171,18 +181,55 @@ if __name__ == "__main__":
                 continue
             print(f"\nScatter plotting {var1} v {var2}")
             # if they dont match, then they get plotted against each other
-            plot_scatter(var1, var2)
+            #plot_scatter(var1, var2)
 
             
             for hue in non_numeric_df:
                 print(f"Plotting lmplot of {var1} v {var2} with hue={hue}")
                 # lmplot() using seaborn
-                lm_scatter(df, var1, var2, hue)
+                #lm_scatter(df, var1, var2, hue)
     
               
     for hue in non_numeric_df:
         print(f"\nCreating pairplot with hue={hue}") 
         create_pairplot(df, hue)
+
+
+
+    plt.close()
+    #create_heatmap(df)
+
+
+
+
+
+
+
+    # plot histogram for a given variable for each species
+    # group by species
+    sepal_length_by_species = df.groupby('species')['sepal_length']
+
+    # specify the species to plot
+    species = 'setosa'
+
+    # get the data for the specified species
+    species_to_plot = sepal_length_by_species.get_group(species)
+    plt.hist(species_to_plot, edgecolor='black')
+    # decorate plot
+    plt.xlabel('sepal length')
+    plt.ylabel('Frequency')
+    plt.title(f'Histogram of sepal length - {species}')
+    plt.show()
+
+
+
+
+
+
+
+
+
+
 
     # end
     print(f"\nAnalysis complete.")
@@ -199,5 +246,7 @@ References:
 
 [4] Pairplot plots "pairwise relationships in a dataset." 
 https://seaborn.pydata.org/generated/seaborn.pairplot.html
+
+[a] https://seaborn.pydata.org/generated/seaborn.heatmap.html
 
 '''
