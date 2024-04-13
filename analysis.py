@@ -5,39 +5,10 @@ import matplotlib.pyplot as plt # for plotting
 import os                       # checking if directory exists
 import seaborn as sns           # more plotting
 import sys
+import numpy as np              # 
 
 
-# define functions
-def plot_scatter(var1, var2):
-    '''
-    This function plots a scatterplot from a two given 
-    variables in a pandas dataframe using matplotlib
-    '''
-    
-    # set up the canvas to have subplots
-    # (N, n) sets how many subplots: N row, n columns
-    fig, ax = plt.subplots(1, 1) 
 
-    # assign variables from dataframe
-    x = df[var1]
-    y = df[var2]
-    
-    # plot using matplotlibs scatter() method
-    ax.scatter(x, y)
-
-    # decorate the plot
-    ax.set_xlabel(var1)
-    ax.set_ylabel(var2)
-    #ax.set_title("Iris Dataset")
-
-    # save plot as png
-    ax.get_figure().savefig(f"plots/{var1}_vs_{var2}_scatter.png")
-
-    # display the whole figure
-    #plt.show()
-
-    # close figures
-    plt.close()
 
 
 def lm_scatter(df, var1, var2, hue):
@@ -166,8 +137,11 @@ with open("variables_summary.txt", "w") as f:
     f.write(str(numeric_df.describe()) + '\n')
 
 
+#######################################################################
+
 
 ## PLOTTING ##
+
 
 # creat a directory for plots if it doenst exist:
 os.makedirs("plots", exist_ok=True)
@@ -176,12 +150,14 @@ os.makedirs("plots", exist_ok=True)
 numeric_headers_list = ["sepal_length", "sepal_width", "petal_width", "petal_length"]
 
 # create list of non_numeric_headers to use as hue in plots
-non_numeric_headers = ["species"]
+non_numeric_headers_list = ["species"]
 
 
-## HISTOGRAMS
+
+## HISTOGRAMS 
 
 # https://realpython.com/python-histograms/
+
 
 # plot the entire dataframe using pandas built in hist method
 
@@ -215,18 +191,18 @@ for var in numeric_headers_list:
     fig, ax = plt.subplots(1, 1) 
 
     # matplotlibs hist function takes the df as an arg
-    ax.hist(df[variable], bins=10, edgecolor="black")
+    ax.hist(df[var], bins=10, edgecolor="black")
 
     # decorate the plot
     ax.set_xlabel("Value")
     ax.set_ylabel("Frequency")
-    ax.set_title(f"Histogram of {variable} using matplotlib")
+    ax.set_title(f"Histogram of {var} using matplotlib")
 
     # save plot as png
-    ax.get_figure().savefig(f"plots/histogram_of_{variable}_using_matplotlib.png")
+    ax.get_figure().savefig(f"plots/histogram_of_{var}_using_matplotlib.png")
 
     # display the whole figure
-    plt.show()
+    #plt.show()
     # close figures
     plt.close()
 
@@ -342,13 +318,6 @@ for variable in numeric_headers_list:
 
 
 
-
-
-
-
-
-
-
 # create histograms grouped by species using pandas hist() and groupby()
 # and plot all 4 on one figure
 # set up canvas
@@ -379,20 +348,15 @@ plt.legend(group.groups.keys(), loc="upper left", bbox_to_anchor=(1, 1))
 plt.tight_layout()
 # save png
 plt.savefig(f"plots/combined_hist_of_variables_grouped_by_species.png", bbox_inches="tight")
-plt.show()
+#plt.show()
 plt.close()
 
 
-
-
-
-
-
-
-
+#####################################################################
 
 
 ## KERNEL DENSITY ESTIMATION (KDE) PLOTS 
+
 
 # what are kernel density plots:
 # https://en.wikipedia.org/wiki/Kernel_density_estimation
@@ -436,18 +400,11 @@ for var in numeric_headers_list:
     plt.close()
 
 
-
-
-
-
-
-
-
-
-
+###############################################################################
 
 
 ## SCATTERPLOTS
+
 
 # nested loop through variables to get two variables for scatter
 for var1 in numeric_headers_list:
@@ -459,13 +416,59 @@ for var1 in numeric_headers_list:
             continue
         print(f"\nScatter plotting {var1} v {var2}")
         # if they dont match, then they get plotted against each other
-        plot_scatter(var1, var2)
+        # define functions
 
+        # set up the canvas to have subplots
+        # (N, n) sets how many subplots: N row, n columns
+        fig, ax = plt.subplots(1, 1) 
+
+        # assign variables from dataframe
+        x = df[var1]
+        y = df[var2]
+
+        # plot using matplotlibs scatter() method
+        ax.scatter(x, y)
+        # ax.plot(x, y) creates a big line instead of points
+
+        # determine line of best fit using polyfit()
+        # https://numpy.org/doc/stable/reference/generated/numpy.polyfit.html
+        # https://stackoverflow.com/questions/19068862/how-to-overplot-a-line-on-a-scatter-plot-in-python
+        m, c = np.polyfit(x, y, 1)
+
+        # add line of best fit to plot
+        # use y=mx+c 
+        ax.plot(x, m*x+c)
+
+        # decorate the plot
+        ax.set_xlabel(var1)
+        ax.set_ylabel(var2)
+        #ax.set_title("Iris Dataset")
+
+        # save plot as png
+        ax.get_figure().savefig(f"plots/{var1}_vs_{var2}_scatter.png")
+
+        # display the whole figure
+        plt.show()
+        # close figures
+        plt.close()
+
+
+# works up to here
+
+
+
+
+for var1 in numeric_headers_list:
+    for var2 in numeric_headers_list:
+        # check if variable names match from both loops
+        if var1 == var2:
+            #skip this loop in the for loop if the two variable names match
+            continue
         
-        for hue in non_numeric_df:
+        for hue in non_numeric_headers_list:
             print(f"Plotting lmplot of {var1} v {var2} with hue={hue}")
             # lmplot() using seaborn
-            #lm_scatter(df, var1, var2, hue)
+            lm_scatter(df, var1, var2, hue)
 
         
 for hue in non_numeric_df:
