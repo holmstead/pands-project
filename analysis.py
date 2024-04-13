@@ -1,61 +1,12 @@
 # author MHolmes
 
-import pandas as pd             # for data analyis
-import matplotlib.pyplot as plt # for plotting
-import os                       # checking if directory exists
-import seaborn as sns           # more plotting
+import pandas as pd                 # for data analyis
+import matplotlib.pyplot as plt     # for plotting
+import os                           # checking if directory exists
+import seaborn as sns               # more plotting
 import sys
-import numpy as np              # 
+import numpy as np                  # for line of best fit on scatterplot 
 
-
-
-
-
-def lm_scatter(df, var1, var2, hue):
-    '''
-    https://seaborn.pydata.org/generated/seaborn.lmplot.html
-    '''
-    # assign variables
-    x = df[var1]
-    y = df[var2]
-
-    # scatter plot using lmplot()
-    print(f"Creating scatterplot using lmplot of {var1}, {var2}")
-    sns.lmplot(data=df, x=var1, y=var2, hue=hue)
-
-    # save plot as png
-    plt.savefig(f"plots/{var1} vs {var2}_lmplot_{hue}.png")
-    #ax.get_figure().savefig(f"plots/{var1} vs {var2}_lmplot_{hue}.png")
-    # display the whole figure
-    #plt.show()
-
-    # close figures
-    plt.close()
-    
-
-def create_pairplot(df, hue):
-    # plot a grid of scatter plots using seaborn [4]
-    print(f"Creating pairplot using {hue} as hue")
-
-    # set up the canvas
-    fig, ax = plt.subplots(1, 1) 
-    ax = sns.pairplot(df, hue=hue)
-    ax.savefig(f"plots/pairplot_by_{hue}.png")
-    #plt.show()
-
-    # close figures
-    plt.close()
-
-
-def create_heatmap(df): 
-    # plot a heatmap using seaborn [a]
-    fig, ax = plt.subplots(1, 1) 
-    ax = sns.heatmap(df.corr(numeric_only=True), annot=True)
-    plt.savefig(f"plots/heatmap.png")
-    #plt.show()
-
-    # close figures
-    plt.close()
 
 
 def plot_hist_by_species(species_to_plot, var, species):
@@ -93,16 +44,10 @@ def plot_hist_by_species(species_to_plot, var, species):
 df = pd.read_csv(sys.argv[1])
 
 # print head and tail of the dataframe
-print(f"\nDataframe head and tail:")
-#print(df) 
+print(f"\nDataframe head and tail:\n {df}")
 
 # view datatypes
 print(df.dtypes) 
-
-
-# print a statistical summary of the dataframe
-print(df.describe())
-
 
 # view headers
 print(f"\nAll headers: {df.columns.tolist()}")
@@ -110,30 +55,24 @@ print(f"\nAll headers: {df.columns.tolist()}")
 
 # create numeric only df
 numeric_df = df.select_dtypes(include="number")
-print(numeric_df)
-print(f"\nNumeric column headers:")
+#print(numeric_df)
 # make a list from numeric_columns variable
-print(numeric_df.columns.tolist())
+numeric_headers_list = numeric_df.columns.tolist()
+print(f"\nNumeric column headers: {numeric_headers_list}")
 
 
-# create df from non-numeric dtypes
+# create df from non-numeric dtypes and make list of headers
 non_numeric_df = df.select_dtypes(exclude="number")
-print(f"\nNon-numeric column headers:")
-print(non_numeric_df.columns.tolist())
+non_numeric_headers_list = non_numeric_df.columns.tolist()
+print(f"\nNon-numeric column headers: {non_numeric_headers_list}")
 
 
-# check which columns we have in numeric_columns
-print(f"\nLooping through column headers in numeric_headers:")
-for column_header in numeric_df:
-    print(column_header)
-
-
-# write statistical summary to textfile
+# write statistical summary to textfile using df.describe()
 # create and open text file
 with open("variables_summary.txt", "w") as f:
     # write to text file
     # convert to string first, cant write <class 'pandas.core.frame.DataFrame'> straight to file
-    print(f"{type(numeric_df.describe())} \n")
+    print(f"\n{type(numeric_df.describe())} \n")
     f.write(str(numeric_df.describe()) + '\n')
 
 
@@ -143,15 +82,8 @@ with open("variables_summary.txt", "w") as f:
 ## PLOTTING ##
 
 
-# creat a directory for plots if it doenst exist:
+# create a directory for plots if it doenst exist:
 os.makedirs("plots", exist_ok=True)
-
-# create list of things of variable names for plotting loops
-numeric_headers_list = ["sepal_length", "sepal_width", "petal_width", "petal_length"]
-
-# create list of non_numeric_headers to use as hue in plots
-non_numeric_headers_list = ["species"]
-
 
 
 ## HISTOGRAMS 
@@ -159,7 +91,7 @@ non_numeric_headers_list = ["species"]
 # https://realpython.com/python-histograms/
 
 
-# plot the entire dataframe using pandas built in hist method
+# plot the entire dataframe using pandas built in hist() method
 
 # set up the canvas
 # (N, n) sets how many subplots: (N row, n columns, figuresize)
@@ -179,12 +111,13 @@ plt.tight_layout()
 #plt.show()
 plt.close()
 
-
-
+#############################################################
 
 
 # create loop to cycle through variables and plot hist using matplotlib
+
 # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html
+
 for var in numeric_headers_list:
     # set up the canvas
     # (N, n) sets how many subplots: N row, n columns
@@ -196,20 +129,85 @@ for var in numeric_headers_list:
     # decorate the plot
     ax.set_xlabel("Value")
     ax.set_ylabel("Frequency")
-    ax.set_title(f"Histogram of {var} using matplotlib")
+    ax.set_title(f"Histogram of {var}, species=all")
 
     # save plot as png
-    ax.get_figure().savefig(f"plots/histogram_of_{var}_using_matplotlib.png")
+    ax.get_figure().savefig(f"plots/histogram_of_{var}_species=all_using_matplotlib.png")
 
     # display the whole figure
     #plt.show()
     # close figures
     plt.close()
 
+#############################################################
+
+
+# plot histogram for a given variable for each species
+
+for var in numeric_headers_list:
+    
+    # group by species
+    attribute_by_species = df.groupby('species')[var]
+
+    # specify the species to plot
+    species = 'setosa'
+
+    # get the data for the specified species
+    species_to_plot = attribute_by_species.get_group(species)
+
+    # set up canvas
+    fig, ax = plt.subplots(1, 1) 
+
+    ax.hist(species_to_plot, edgecolor='black')
+    # decorate plot
+    ax.set_xlabel('Value')
+    ax.set_ylabel('Frequency')
+    ax.set_title(f'Histogram of {var} - {species}')
+
+    # save plot as png
+    ax.get_figure().savefig(f"plots/histogram_of_{var}_by_species_using_matplotlib.png")
+
+    #plt.show()
+    plt.close()
+
+#############################################################
+
+
+# plot histograms of a Series for each unique species
+
+# get unique species values and put in a list
+unique_species_list = df['species'].unique()
+print(f"Unique species list: {unique_species_list}")
+
+# start outer for loop
+for var in numeric_headers_list:
+    
+    # inner loop through species in unique species list
+    for species in unique_species_list:
+        #print(f"\nPlotting histograms for {var} by {species}")
+        var_by_species = df.groupby('species')[var]
+        
+        # get the data for the specified species
+        species_to_plot = var_by_species.get_group(species)
+
+        # set up canvas
+        fig, ax = plt.subplots(1, 1) 
+
+        ax.hist(species_to_plot, edgecolor='black')
+        # decorate plot
+        ax.set_xlabel('Value')
+        ax.set_ylabel('Frequency')
+        ax.set_title(f'Histogram of {var} - {species}')
+
+        # save plot as png
+        ax.get_figure().savefig(f"plots/histogram_of_{var}_species={species}_using_matplotlib.png")
+
+        plt.show()
+        plt.close()
 
 
 
-
+#############################################################
 
 
 # create a loop to plot a histogram of every numeric column 
@@ -241,7 +239,7 @@ for variable in numeric_headers_list:
     # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html
     # using ax=ax[0], ax[1] or something
 
-
+###############################################################
 
 
 # create a loop to plot a histogram of every numeric column 
@@ -275,19 +273,14 @@ plt.savefig(f"plots/combined_histogram_of_variables_using_pandas.png")
 # close figures
 plt.close()
 
-
-
-
-
-
-
+########################################################
 
 
 # create histograms grouped by species using pandas hist() and groupby()
 # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html
 
 for variable in numeric_headers_list:
-    print(f"Plotting histograms grouping by {variable} using pandas.")
+    print(f"\nPlotting histograms grouping by {variable} using pandas.")
     
     # set up the canvas
     fig, ax = plt.subplots(1, 1)
@@ -315,7 +308,7 @@ for variable in numeric_headers_list:
     #plt.show()
     plt.close()
 
-
+########################################################
 
 
 # create histograms grouped by species using pandas hist() and groupby()
@@ -325,7 +318,7 @@ fig, ax = plt.subplots(2, 2, figsize=(12,10))
 # flatten
 ax = ax.flatten()
 for i, variable in enumerate(numeric_headers_list):
-    print(f"Plotting histograms grouping by {variable} using pandas.")
+    print(f"\nPlotting histograms grouping by {variable} using pandas.")
     
     # group by species using groupby() method, and filter by 'variable'
     group = df.groupby("species")[variable]
@@ -414,7 +407,7 @@ for var1 in numeric_headers_list:
             print(f"\nNot plotting {var1} against {var2}")
             #skip this loop in the for loop if the two variable names match
             continue
-        print(f"\nScatter plotting {var1} v {var2}")
+        print(f"\nScatter plotting {var1} v {var2} using matplotlib")
         # if they dont match, then they get plotted against each other
         # define functions
 
@@ -448,15 +441,16 @@ for var1 in numeric_headers_list:
         ax.get_figure().savefig(f"plots/{var1}_vs_{var2}_scatter.png")
 
         # display the whole figure
-        plt.show()
+        #plt.show()
         # close figures
         plt.close()
 
 
-# works up to here
+###########################################################
 
+# scatterplots using seaborns lmplot() method
 
-
+# https://seaborn.pydata.org/generated/seaborn.lmplot.html
 
 for var1 in numeric_headers_list:
     for var2 in numeric_headers_list:
@@ -466,78 +460,71 @@ for var1 in numeric_headers_list:
             continue
         
         for hue in non_numeric_headers_list:
-            print(f"Plotting lmplot of {var1} v {var2} with hue={hue}")
+            print(f"\nPlotting lmplot of {var1} v {var2} with hue={hue}")
             # lmplot() using seaborn
-            lm_scatter(df, var1, var2, hue)
 
-        
-for hue in non_numeric_df:
-    print(f"\nCreating pairplot with hue={hue}") 
-    #create_pairplot(df, hue)
+            # assign variables
+            x = df[var1]
+            y = df[var2]
+
+            # scatter plot using lmplot()
+            sns.lmplot(data=df, x=var1, y=var2, hue=hue)
+
+            # save plot as png
+            plt.savefig(f"plots/{var1}_vs_{var2}_lmplot_{hue}.png")
+            #ax.get_figure().savefig(f"plots/{var1} vs {var2}_lmplot_{hue}.png")
+            # display the whole figure
+            #plt.show()
+
+            # close figures
+            plt.close()
+
+###########################################################
+   
+
+# pairplots using seaborns pairplot() method
+
+# https://seaborn.pydata.org/generated/seaborn.pairplot.html
+
+for hue in non_numeric_headers_list: 
+    # plot a grid of scatter plots using seaborn [4]
+    print(f"\nCreating pairplot using {hue} as hue")
+
+    # set up the canvas
+    fig, ax = plt.subplots(1, 1) 
+
+    # create the pairplot using seaborn
+    sns.pairplot(df, hue=hue)
+
+    # save the plot as png
+    plt.savefig(f"plots/pairplot_by_{hue}.png")
+
+    #plt.show()
+    plt.close()
+
+#########################################################
 
 
+# create a heatmap using seaborn
 
-plt.close()
-#create_heatmap(df)
+# https://seaborn.pydata.org/generated/seaborn.heatmap.html
 
+# set up canvas
+fig, ax = plt.subplots(1, 1) 
 
+# plot the heatmap using seaborn
+sns.heatmap(df.corr(numeric_only=True), annot=True)
 
+# save the plot as png
+plt.savefig(f"plots/heatmap.png")
 
-
-
-
-# plot histogram for a given variable for each species
-# group by species
-#sepal_length_by_species = df.groupby('species')['sepal_length']
-
-# specify the species to plot
-#species = 'setosa'
-
-# get the data for the specified species
-#species_to_plot = sepal_length_by_species.get_group(species)
-#plt.hist(species_to_plot, edgecolor='black')
-# decorate plot
-#plt.xlabel('sepal length')
-#plt.ylabel('Frequency')
-#plt.title(f'Histogram of sepal length - {species}')
 #plt.show()
+plt.close()
+
+########################################################
 
 
-### MORE HISTOGRAMS
-
-
-
-
-###
-
-
-
-# loop through species and variables and plot histograms
-# get unique species values
-unique_species = df['species'].unique()
-#print(f"Unique species: {unique_species}")
-
-for var in numeric_df:
-    #print(var)
-    #var_by_species = df.groupby('species')[var]
-    # print each unique species
-    for species in unique_species:
-        #print(f"\nPlotting histograms for {var} by {species}")
-        var_by_species = df.groupby('species')[var]
-        species_to_plot = var_by_species.get_group(species)
-        #plot_hist_by_species(species_to_plot, var, species)
-
-
-        
-
-####
-
-
-
-
-
-
-# end
+## END
 print(f"\nAnalysis complete.")
 
 
@@ -553,6 +540,6 @@ References:
 [4] Pairplot plots "pairwise relationships in a dataset." 
 https://seaborn.pydata.org/generated/seaborn.pairplot.html
 
-[a] https://seaborn.pydata.org/generated/seaborn.heatmap.html
+[a] 
 
 '''
