@@ -219,13 +219,35 @@ if __name__ == "__main__":
     # save plot as png
     ax.get_figure().savefig(f"plots/df.hist.png")
     plt.tight_layout()
-    plt.show()
+    #plt.show()
     plt.close()
 
 
+    ## KDE plots
+
+    # what are kernel density plots:
+    # https://en.wikipedia.org/wiki/Kernel_density_estimation
+    
+    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.kde.html
 
 
 
+    
+
+    # seaborn KDE
+    # https://seaborn.pydata.org/generated/seaborn.kdeplot.html
+
+    # set up the canvas
+    fig, ax = plt.subplots(1, 1) 
+
+    # pass the pandas dataframe in to seaborn
+    sns.kdeplot(data=df, ax=ax)
+
+    # save plot as png
+    ax.get_figure().savefig(f"plots/kde_seaborn.png")
+    plt.tight_layout()
+    plt.show()
+    plt.close()
 
 
 
@@ -235,7 +257,7 @@ if __name__ == "__main__":
     # create loop to cycle through variables and plot hist
     for var1 in numeric_df:
         print(f"\nPlotting histogram of {var1} using matplotlib hist()")
-        plot_hist(df, var1)
+        #plot_hist(df, var1)
 
 
     # nested loop through variables to get two variables for scatter
@@ -248,18 +270,18 @@ if __name__ == "__main__":
                 continue
             print(f"\nScatter plotting {var1} v {var2}")
             # if they dont match, then they get plotted against each other
-            plot_scatter(var1, var2)
+            #plot_scatter(var1, var2)
 
             
             for hue in non_numeric_df:
                 print(f"Plotting lmplot of {var1} v {var2} with hue={hue}")
                 # lmplot() using seaborn
-                lm_scatter(df, var1, var2, hue)
+                #lm_scatter(df, var1, var2, hue)
     
               
     for hue in non_numeric_df:
         print(f"\nCreating pairplot with hue={hue}") 
-        create_pairplot(df, hue)
+        #create_pairplot(df, hue)
 
 
 
@@ -301,17 +323,17 @@ if __name__ == "__main__":
     # loop through species and variables and plot histograms
     # get unique species values
     unique_species = df['species'].unique()
-    print(f"Unique species: {unique_species}")
+    #print(f"Unique species: {unique_species}")
 
     for var in numeric_df:
         #print(var)
         #var_by_species = df.groupby('species')[var]
         # print each unique species
         for species in unique_species:
-            print(f"\nPlotting histograms for {var} by {species}")
+            #print(f"\nPlotting histograms for {var} by {species}")
             var_by_species = df.groupby('species')[var]
             species_to_plot = var_by_species.get_group(species)
-            plot_hist_by_species(species_to_plot, var, species)
+            #plot_hist_by_species(species_to_plot, var, species)
 
 
             
