@@ -4,10 +4,10 @@
 
 This repository contains an analysis of the Iris dataset.[1.0]
 
-![flowers](https://miro.medium.com/v2/resize:fit:720/format:webp/1*YYiQed4kj_EZ2qfg_imDWA.png)
+![flowers](https://miro.medium.com/v2/resize:fit:720/format:webp/1*YYiQed4kj_EZ2qfg_imDWA.png "Iris flowers [1.1]")
 *Iris flowers [1.1]*
 
-Original data was collected by Edgar Anderson, and made famous by Ronald Fisher.[2]
+Original data was collected by Edgar Anderson, and made famous by Ronald Fisher.[2] The Iris dataset has become a benchmark dataset for intorductory data analysis. 
 
 The Iris dataset can be found in UC Irvines Machine Learning repository:
 
@@ -20,15 +20,15 @@ The datset used in this analysis can be found here:
 
 ## About
 
-This program reads in a dataset (csv) and plots histograms, scatterplots, and summarizes numerical variables (mean, standard deviation, max, min).
+This program reads in a dataset (csv) and summarizes numerical variables, plots histograms, scatterplots, etc.
 
-This program can be used to analyse any dataset in csv form. It will:
+This program can be used to analyse ~~any dataset~~ the Iris dataset in csv form. Currently, it will:
 
-    - plot histograms of every numeric variable using matplotlib
-    - plot scatterplots of every pair of numeric variables using matplotlib
-    - plot lmplots using seaborn of every pair of numeric variables, with a 'hue' of every non-numeric variable in the datset
+- plot histograms of every numeric variable using matplotlib
+- plot scatterplots of every pair of numeric variables using matplotlib
+- plot lmplots using seaborn of every pair of numeric variables, with a 'hue' of every non-numeric variable in the datset
 
-This will create a lot of plots in the 'plots' directory. You can then weed out the plots that you dont need or like.
+This will create a lot of plots in the 'plots' directory. You can then weed out the plots that you dont need or like. Next feature to add is checking if the plot is worth plotting or not, maybe add a R^2 check or something ...
 
 
 ## Quickstart
@@ -38,10 +38,10 @@ Install stuff:
 ```
 python pip install pandas matplotlib seaborn os
 git clone https://github.com/holmstead/pands-project.git
-
 ```
-Run the program:
 
+Run the program:
+git push
 ```
 python analysis.py example_dataset.csv
 ```
@@ -69,7 +69,7 @@ Python is a general purpose programming language. The Python interperter can be 
     - https://seaborn.pydata.org/
 
 
-Once everything is installed, run the follwoing command in the console: 
+Once everything is installed, run the following command in the console: 
 
 ```
 python analysis.py example_dataset.csv
@@ -80,13 +80,15 @@ python analysis.py example_dataset.csv
 
 Pull requests to holmstead@protonmail.com.
 
+
 ## References
 
 [^1.0] https://archive.ics.uci.edu/dataset/53/iris
 
 [1.1] https://peaceadegbite1.medium.com/iris-flower-classification-60790e9718a1
 
-[2] - https://en.wikipedia.org/wiki/Iris_flower_data_set
+[^2] https://en.wikipedia.org/wiki/Iris_flower_data_set
+
 
 ## Author
 
