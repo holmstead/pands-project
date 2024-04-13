@@ -24,11 +24,17 @@ This program reads in a dataset (csv) and summarizes numerical variables, plots 
 
 This program can be used to analyse ~~any dataset~~ the Iris dataset in csv form. Currently, it will:
 
-- plot histograms of every numeric variable using matplotlib
+- output a statistical summary of the dataframe to a textfile
+- plot histograms of every numeric variable using matplotlib and pandas
+- plot combined histograms in one figure
+- plot Kernel Density Estimations
 - plot scatterplots of every pair of numeric variables using matplotlib
-- plot lmplots using seaborn of every pair of numeric variables, with a 'hue' of every non-numeric variable in the datset
+- plot scatterplots using seaborns lmplot() method, of every pair of numeric variables, with a 'hue'
+- plot pairplot using seaborn
+- plot a heatmap depicting the correlation between variables
 
-This will create a lot of plots in the 'plots' directory. You can then weed out the plots that you dont need or like. Next feature to add is checking if the plot is worth plotting or not, maybe add a R^2 check or something ...
+
+This will create a _lot_ of plots in the 'plots' directory. You can then weed out the plots that you dont need or like. Next feature to add is checking if the plot is worth plotting or not, maybe add a R^2 check or something ...
 
 Histograms are useful for visualizing distributions.
 
