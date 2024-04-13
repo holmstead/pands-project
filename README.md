@@ -30,6 +30,9 @@ This program can be used to analyse ~~any dataset~~ the Iris dataset in csv form
 
 This will create a lot of plots in the 'plots' directory. You can then weed out the plots that you dont need or like. Next feature to add is checking if the plot is worth plotting or not, maybe add a R^2 check or something ...
 
+Histograms are useful for visualizing distributions.
+
+Kernel Density Estimates are related to histograms
 
 ## Quickstart
 
@@ -74,6 +77,40 @@ Once everything is installed, run the following command in the console:
 ```
 python analysis.py example_dataset.csv
 ```
+
+
+## Analysis
+
+**elaborate on the difference between a dataframe and a series.
+
+Pandas built-in hist method can give overview of dataframe:
+
+![df.hist](./plots/df.hist.png)
+
+
+We can plot histograms of individual variables from the dataframe:
+
+![hist](./plots/histogram_of_petal_length_using_matplotlib.png)
+
+Pandas has built in hist method. Can select how many bins too in both methods.
+
+![hist](./plots/histogram_of_petal_length_using_pandas.png)
+
+Thats still not showing us by species though, thats for all species in the dataframe combined.
+
+We can group them using pandas and groupby() method:
+
+![grouped_hist](./plots/histogram_of_petal_length_grouped_by_species.png)
+
+KDE plots are related to histograms:
+
+![kde](./plots/kde_petal_length_species_seaborn.png)
+
+
+Matplotlib basic scatterplot of two variables:
+
+![matscatter](./plots/sepal_width_vs_petal_length_scatter.png)
+We can't tell which species or anything though.
 
 
 ##  Contribute
