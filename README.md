@@ -81,12 +81,13 @@ python analysis.py example_dataset.csv
 
 ## Analysis
 
+The idea is to churn out heaps of plots, then decide which ones to present.
+
 **elaborate on the difference between a dataframe and a series.
 
 Pandas built-in hist method can give overview of dataframe:
 
 ![df.hist](./plots/df.hist.png)
-
 
 We can plot histograms of individual variables from the dataframe:
 
@@ -96,11 +97,19 @@ Pandas has built in hist method. Can select how many bins too in both methods.
 
 ![hist](./plots/histogram_of_petal_length_using_pandas.png)
 
+Combining the histograms of ecah of the variables onto one figure gives us a better overview of the dataset:
+
+![combined_hist](./plots/combined_histogram_of_variables_using_pandas.png)
+
 Thats still not showing us by species though, thats for all species in the dataframe combined.
 
 We can group them using pandas and groupby() method:
 
 ![grouped_hist](./plots/histogram_of_petal_length_grouped_by_species.png)
+
+We can put the grouped histograms of each variable onto one figure also. Had to make the figure larger to accomodate the titles ...
+
+![combined_grouped_hist](./plots/combined_hist_of_variables_grouped_by_species.png)
 
 KDE plots are related to histograms:
 
