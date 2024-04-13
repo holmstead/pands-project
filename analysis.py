@@ -216,8 +216,9 @@ if __name__ == "__main__":
     # plot the entire dataframe using pandas built in hist method
     
     # set up the canvas
-    # (N, n) sets how many subplots: N row, n columns
-    fig, ax = plt.subplots(1, 1) 
+    # (N, n) sets how many subplots: (N row, n columns, figuresize)
+    # testing how to adjust figure size for nice readme.md
+    fig, ax = plt.subplots(1, 1, figsize=(5, 5)) 
 
     # plot histogram using pandas built in hist()
     df.hist(bins=10, ax=ax) 
@@ -256,9 +257,49 @@ if __name__ == "__main__":
         ax.get_figure().savefig(f"plots/histogram_of_{variable}_using_pandas.png")
         # display the whole figure
         #plt.show()
-
         # close figures
         plt.close()
+
+        # need to figure out how to put those 4 histograms onto one figure
+        # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html
+        # using ax=ax[0], ax[1] or something
+
+
+
+
+    # create a loop to plot a histogram of every numeric column 
+    # using pandas built in hist() method and PLOT ALL ON ONE FIGURE
+    # set up the canvas BEFORE the for loop
+    # (N, n) sets how many subplots: N row, n columns
+    fig, ax = plt.subplots(2, 2)
+    # have to flatten 2x2 to 1x4 so we can iterate over it 
+    ax = ax.flatten()
+    # now start the loop
+    # add enumerate feature so we number each variable as we iterate through 1-4
+    # use i for assigning axes number e.g. ax=ax[2]
+    for i, variable in enumerate(numeric_headers_list):
+        # plot a histogram of the specified variable in the df
+        #print(f"\nPlotting histogram of {variable} using pandas")
+        # create a hist from a given column in the df using df["sepal_length"] for example
+        df[variable].plot.hist(bins=30, color="green", edgecolor="black", ax=ax[i])
+
+        # decorate the plot
+        ax[i].set_xlabel("Value")
+        ax[i].set_ylabel("Frequency")
+        ax[i].set_title(f"Histogram of {variable}")
+
+    # auto adjust layout before saving
+    plt.tight_layout()
+    # save plot as png
+    plt.savefig(f"plots/combined_histogram_of_variables_using_pandas.png")
+    
+    # display the whole figure
+    #plt.show()
+    # close figures
+    plt.close()
+
+
+
 
 
     # create loop to cycle through variables and plot hist using matplotlib
@@ -299,6 +340,19 @@ if __name__ == "__main__":
         plt.tight_layout()
         #plt.show()
         plt.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
