@@ -89,7 +89,7 @@ Pandas built-in hist method can give overview of dataframe:
 
 ![df.hist](./plots/df.hist.png)
 
-We can plot histograms of individual variables from the dataframe:
+We can plot histograms of individual variables e.g. petal length (these are called a Series) from the dataframe:
 
 ![hist](./plots/histogram_of_petal_length_using_matplotlib.png)
 
@@ -119,8 +119,20 @@ KDE plots are related to histograms:
 Matplotlib basic scatterplot of two variables:
 
 ![matscatter](./plots/sepal_width_vs_petal_length_scatter.png)
+
 We can't tell which species or anything though.
 
+Seaborn has a function called lmplot for scatterplots. We can see now three lines of best fir, by species:
+
+![lmplot](./plots/sepal_width_vs_petal_length_lmplot_species.png)
+
+Pairplots combine a lot of useful visuals into one easy to create figure:
+
+![pairplot](./plots/pairplot_by_species.png)
+
+Heatmaps are class
+
+![heatmap](./plots/heatmap.png)
 
 ##  Contribute
 
