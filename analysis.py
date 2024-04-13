@@ -351,6 +351,38 @@ if __name__ == "__main__":
 
 
 
+    # create histograms grouped by species using pandas hist() and groupby()
+    # and plot all 4 on one figure
+    # set up canvas
+    fig, ax = plt.subplots(2, 2, figsize=(12,10))
+    # flatten
+    ax = ax.flatten()
+    for i, variable in enumerate(numeric_headers_list):
+        print(f"Plotting histograms grouping by {variable} using pandas.")
+        
+        # group by species using groupby() method, and filter by 'variable'
+        group = df.groupby("species")[variable]
+
+        # plot the group
+        group.hist(bins=10, alpha=0.5, ax=ax[i])
+
+        # decorate plot
+        ax[i].set_xlabel(variable)
+        ax[i].set_ylabel("Frequency")
+        ax[i].set_title(f"Histogram of {variable} by species")
+
+        # add legend
+        # when you use groupby() it auto creates keys which can be used in the legend
+        #ax.legend(group.groups.keys())
+
+    # specify where legend is using loc and bbox_to_anchor()
+    # https://matplotlib.org/stable/users/explain/axes/legend_guide.html
+    plt.legend(group.groups.keys(), loc="upper left", bbox_to_anchor=(1, 1))   
+    plt.tight_layout()
+    # save png
+    plt.savefig(f"plots/combined_hist_of_variables_grouped_by_species.png", bbox_inches="tight")
+    plt.show()
+    plt.close()
 
 
 
