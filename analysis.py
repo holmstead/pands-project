@@ -21,7 +21,7 @@ def plot_hist(df, variable):
     fig, ax = plt.subplots(1, 1) 
 
     # matplotlibs hist function takes the df as an arg
-    ax.hist(df[variable], bins=10, color="green", edgecolor="black")
+    ax.hist(df[variable], bins=10, edgecolor="black")
 
     # decorate the plot
     ax.set_xlabel("Value")
@@ -29,7 +29,7 @@ def plot_hist(df, variable):
     ax.set_title(f"Histogram of {variable} using matplotlib")
 
     # save plot as png
-    ax.get_figure().savefig(f"plots/Histogram_of_{variable}_using_matplotlib.png")
+    ax.get_figure().savefig(f"plots/histogram_of_{variable}_using_matplotlib.png")
 
     # display the whole figure
     #plt.show()
@@ -48,7 +48,7 @@ def plot_scatter(var1, var2):
     # (N, n) sets how many subplots: N row, n columns
     fig, ax = plt.subplots(1, 1) 
 
-    # assign variables
+    # assign variables from dataframe
     x = df[var1]
     y = df[var2]
     
@@ -61,7 +61,7 @@ def plot_scatter(var1, var2):
     #ax.set_title("Iris Dataset")
 
     # save plot as png
-    ax.get_figure().savefig(f"plots/{var1} vs {var2}_scatter.png")
+    ax.get_figure().savefig(f"plots/{var1}_vs_{var2}_scatter.png")
 
     # display the whole figure
     #plt.show()
@@ -205,6 +205,9 @@ if __name__ == "__main__":
     # create list of things of variable names for plotting loops
     numeric_headers_list = ["sepal_length", "sepal_width", "petal_width", "petal_length"]
     
+    # create list of non_numeric_headers to use as hue in plots
+    non_numeric_headers = ["species"]
+
 
     ## HISTOGRAMS
 
@@ -217,8 +220,10 @@ if __name__ == "__main__":
     fig, ax = plt.subplots(1, 1) 
 
     # plot histogram using pandas built in hist()
-    df.hist(ax=ax) 
+    df.hist(bins=10, ax=ax) 
     # df.plot.hist() puts them all on one figure, its a mess
+    # https://stackoverflow.com/questions/57008086/df-hist-vs-df-plot-hist
+    # "They do different things, df.hist() will produce a separate plot for each Series whilst df.plot.hist() will produce a stacked single plot"
     # ax = df.hist() doesnt work for some reason
     
     # save plot as png
@@ -228,7 +233,82 @@ if __name__ == "__main__":
     plt.close()
 
 
-    ## Kernel Density Estimation
+
+    # create a loop to plot a histogram of every numeric column 
+    # using pandas built in hist() method.
+    for variable in numeric_headers_list:
+        # plot a histogram of the specified variable in the df
+        print(f"\nPlotting histogram of {variable} using pandas")
+
+        # set up the canvas
+        # (N, n) sets how many subplots: N row, n columns
+        fig, ax = plt.subplots(1, 1)
+
+        # create a hist from a given column in the df using df["sepal_length"] for example
+        df[variable].plot.hist(bins=30, color="green", edgecolor="black", ax=ax)
+
+        # decorate the plot
+        ax.set_xlabel("Value")
+        ax.set_ylabel("Frequency")
+        ax.set_title(f"Histogram of {variable}")
+
+        # save plot as png
+        ax.get_figure().savefig(f"plots/histogram_of_{variable}_using_pandas.png")
+        # display the whole figure
+        #plt.show()
+
+        # close figures
+        plt.close()
+
+
+    # create loop to cycle through variables and plot hist using matplotlib
+    for var in numeric_headers_list:
+        print(f"\nPlotting histogram of {var} using matplotlib hist()")
+        plot_hist(df, var)
+
+
+
+    # create histograms grouped by species using pandas hist() and groupby()
+    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html
+
+    for variable in numeric_headers_list:
+        print(f"Plotting histograms grouping by {variable} using pandas.")
+        
+        # set up the canvas
+        fig, ax = plt.subplots(1, 1)
+
+        # group by species using groupby() method, and filter by 'variable'
+        group = df.groupby("species")[variable]
+
+        # plot the group
+        group.hist(bins=10, alpha=0.5, ax=ax)
+        # note: earlier it was df.hist(), now its group.hist()
+
+        # decorate plot
+        ax.set_xlabel(variable)
+        ax.set_ylabel("Frequency")
+        ax.set_title(f"Histogram of {variable} by species")
+
+        # add legend
+        # when you use groupby() it auto creates keys which can be used in the legend
+        ax.legend(group.groups.keys())
+        
+        # save png
+        ax.get_figure().savefig(f"plots/histogram_of_{variable}_grouped_by_species.png")
+
+        plt.tight_layout()
+        #plt.show()
+        plt.close()
+
+
+
+
+
+
+
+
+
+    ## KERNEL DENSITY ESTIMATION (KDE) PLOTS 
 
     # what are kernel density plots:
     # https://en.wikipedia.org/wiki/Kernel_density_estimation
@@ -236,7 +316,7 @@ if __name__ == "__main__":
     # plot KDE using pandas
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.kde.html
 
-
+    # not yet
     
 
     # plot KDE using seaborn
@@ -246,28 +326,29 @@ if __name__ == "__main__":
     fig, ax = plt.subplots(1, 1) 
 
     # pass the pandas dataframe in to seaborn
-    sns.kdeplot(data=df, ax=ax)
+    sns.kdeplot(data=df, fill=True, ax=ax)
 
     # save plot as png
     ax.get_figure().savefig(f"plots/kde_seaborn.png")
     plt.tight_layout()
-    plt.show()
+    #plt.show()
     plt.close()
 
 
     # plot KDE using seaborn but using species as hue
+    # loop through variables on x-axis
     for var in numeric_headers_list:
         
         # set up the canvas
         fig, ax = plt.subplots(1, 1) 
 
         # specify variable to plot on x axis, and hue
-        sns.kdeplot(data=df, x=var, hue="species", ax=ax)
+        sns.kdeplot(data=df, x=var, hue="species", fill=True, ax=ax)
 
         # save plot as png
         ax.get_figure().savefig(f"plots/kde_{var}_species_seaborn.png")
         plt.tight_layout()
-        plt.show()
+        #plt.show()
         plt.close()
 
 
@@ -275,15 +356,18 @@ if __name__ == "__main__":
 
 
 
-    # create loop to cycle through variables and plot hist
-    for var1 in numeric_df:
-        print(f"\nPlotting histogram of {var1} using matplotlib hist()")
-        #plot_hist(df, var1)
 
+
+
+
+
+
+
+    ## SCATTERPLOTS
 
     # nested loop through variables to get two variables for scatter
-    for var1 in numeric_df:
-        for var2 in numeric_df:
+    for var1 in numeric_headers_list:
+        for var2 in numeric_headers_list:
             # check if variable names match from both loops
             if var1 == var2:
                 print(f"\nNot plotting {var1} against {var2}")
@@ -291,7 +375,7 @@ if __name__ == "__main__":
                 continue
             print(f"\nScatter plotting {var1} v {var2}")
             # if they dont match, then they get plotted against each other
-            #plot_scatter(var1, var2)
+            plot_scatter(var1, var2)
 
             
             for hue in non_numeric_df:
