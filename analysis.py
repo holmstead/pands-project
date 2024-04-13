@@ -9,37 +9,6 @@ import numpy as np                  # for line of best fit on scatterplot
 
 
 
-def plot_hist_by_species(species_to_plot, var, species):
-    '''
-    This function plots a histogram from a given variable
-    in a pandas dataframe
-    '''
-    
-    # set up the canvas
-    # (N, n) sets how many subplots: N row, n columns
-    fig, ax = plt.subplots(1, 1) 
-
-    print(f"Species to plot: {species_to_plot}")
-    ax.hist(species_to_plot, color="orange",  edgecolor='black')
-
-    # decorate the plot
-    ax.set_xlabel("Value")
-    ax.set_ylabel("Frequency")
-    ax.set_title(f"Histogram of {var} - {species}")
-
-    # save plot as png
-    ax.get_figure().savefig(f"plots/Hist {var} - {species}.png")
-    #ax.savefig(f"plots/Histogram of {variable}.png")
-
-    # display the whole figure
-    #plt.show()
-
-    # close figures
-    plt.close()
-
-
-#################################################################################
-
 # load local csv into a pandas dataframe [1]
 df = pd.read_csv(sys.argv[1])
 
@@ -56,7 +25,7 @@ print(f"\nAll headers: {df.columns.tolist()}")
 # create numeric only df
 numeric_df = df.select_dtypes(include="number")
 #print(numeric_df)
-# make a list from numeric_columns variable
+# make a list from numeric_df variable
 numeric_headers_list = numeric_df.columns.tolist()
 print(f"\nNumeric column headers: {numeric_headers_list}")
 
@@ -202,7 +171,7 @@ for var in numeric_headers_list:
         # save plot as png
         ax.get_figure().savefig(f"plots/histogram_of_{var}_species={species}_using_matplotlib.png")
 
-        plt.show()
+        #plt.show()
         plt.close()
 
 
@@ -512,8 +481,11 @@ for hue in non_numeric_headers_list:
 # set up canvas
 fig, ax = plt.subplots(1, 1) 
 
+# calculate the corroletaion
+corr = df.corr(numeric_only=True)
+
 # plot the heatmap using seaborn
-sns.heatmap(df.corr(numeric_only=True), annot=True)
+sns.heatmap(corr, annot=True)
 
 # save the plot as png
 plt.savefig(f"plots/heatmap.png")
@@ -521,8 +493,7 @@ plt.savefig(f"plots/heatmap.png")
 #plt.show()
 plt.close()
 
-########################################################
-
+#########################################################
 
 ## END
 print(f"\nAnalysis complete.")
