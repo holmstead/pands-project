@@ -202,18 +202,23 @@ if __name__ == "__main__":
     # creat a directory for plots if it doenst exist:
     os.makedirs("plots", exist_ok=True)
 
+    # create list of things of variable names for plotting loops
+    numeric_headers_list = ["sepal_length", "sepal_width", "petal_width", "petal_length"]
+    
 
     ## HISTOGRAMS
 
     # https://realpython.com/python-histograms/
 
     # plot the entire dataframe using pandas built in hist method
+    
     # set up the canvas
     # (N, n) sets how many subplots: N row, n columns
     fig, ax = plt.subplots(1, 1) 
+
     # plot histogram using pandas built in hist()
     df.hist(ax=ax) 
-    # df.plot.hist() pluts them all on one figure, its a mess
+    # df.plot.hist() puts them all on one figure, its a mess
     # ax = df.hist() doesnt work for some reason
     
     # save plot as png
@@ -223,18 +228,18 @@ if __name__ == "__main__":
     plt.close()
 
 
-    ## KDE plots
+    ## Kernel Density Estimation
 
     # what are kernel density plots:
     # https://en.wikipedia.org/wiki/Kernel_density_estimation
     
+    # plot KDE using pandas
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.kde.html
-
 
 
     
 
-    # seaborn KDE
+    # plot KDE using seaborn
     # https://seaborn.pydata.org/generated/seaborn.kdeplot.html
 
     # set up the canvas
@@ -248,6 +253,22 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
     plt.close()
+
+
+    # plot KDE using seaborn but using species as hue
+    for var in numeric_headers_list:
+        
+        # set up the canvas
+        fig, ax = plt.subplots(1, 1) 
+
+        # specify variable to plot on x axis, and hue
+        sns.kdeplot(data=df, x=var, hue="species", ax=ax)
+
+        # save plot as png
+        ax.get_figure().savefig(f"plots/kde_{var}_species_seaborn.png")
+        plt.tight_layout()
+        plt.show()
+        plt.close()
 
 
 
