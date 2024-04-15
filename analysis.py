@@ -1,4 +1,7 @@
-# author MHolmes
+'''
+This program reads in a dataset (csv) and summarizes numerical variables, 
+plots histograms, scatterplots, etc.
+'''
 
 import pandas as pd                 # for data analyis
 import matplotlib.pyplot as plt     # for plotting
@@ -7,9 +10,23 @@ import seaborn as sns               # more plotting
 import sys
 import numpy as np                  # for line of best fit on scatterplot 
 
+# check if two arguments given
+if len(sys.argv) != 2:
+    print("Usage: python analysis.py <filename>\nExiting.")
+    # kill the program if we didnt get 2 args
+    sys.exit(1)
+# handle file not found exception
+else:
+    try:
+        with open(sys.argv[1], "r"):
+            # file found ok so pass 
+            pass
+    except FileNotFoundError:
+        print("File not found.\nExiting.", end="\n")
+        sys.exit(1)
 
 
-# load local csv into a pandas dataframe [1]
+# load specified csv into a pandas dataframe [1]
 df = pd.read_csv(sys.argv[1])
 
 # print head and tail of the dataframe
@@ -25,6 +42,7 @@ print(f"\nAll headers: {df.columns.tolist()}")
 # create numeric only df
 numeric_df = df.select_dtypes(include="number")
 #print(numeric_df)
+
 # make a list from numeric_df variable
 numeric_headers_list = numeric_df.columns.tolist()
 print(f"\nNumeric column headers: {numeric_headers_list}")
@@ -367,6 +385,7 @@ for var in numeric_headers_list:
 
 ## SCATTERPLOTS
 
+# using matplotlib with line of best fit
 
 # nested loop through variables to get two variables for scatter
 for var1 in numeric_headers_list:
@@ -389,7 +408,7 @@ for var1 in numeric_headers_list:
         y = df[var2]
 
         # plot using matplotlibs scatter() method
-        ax.scatter(x, y)
+        ax.scatter(x, y)#, alpha=0.5)
         # ax.plot(x, y) creates a big line instead of points
 
         # determine line of best fit using polyfit()
@@ -406,6 +425,7 @@ for var1 in numeric_headers_list:
         ax.set_ylabel(var2)
         #ax.set_title("Iris Dataset")
 
+        #ax.grid(True)
         # save plot as png
         ax.get_figure().savefig(f"plots/{var1}_vs_{var2}_scatter.png")
 
@@ -416,6 +436,58 @@ for var1 in numeric_headers_list:
 
 
 ###########################################################
+
+# scatterplot using matplotlib but with color by species
+
+# nested loop through variables to get two variables for scatter
+for var1 in numeric_headers_list:
+    for var2 in numeric_headers_list:
+        # check if variable names match from both loops
+        if var1 == var2:
+            print(f"\nNot plotting {var1} against {var2}")
+            #skip this loop in the for loop if the two variable names match
+            continue
+        print(f"\nScatter plotting {var1} v {var2} using matplotlib")
+        # if they dont match, then they get plotted against each other
+        # define functions
+
+        # set up the canvas (N rows, n columns)
+        fig, ax = plt.subplots(1, 1) 
+
+        colors = ["red", "blue", "green"]
+        for i, species in enumerate(unique_species_list):
+
+            # create a new df from filtering
+            species_df = df[df['species'] == species]
+
+            # assign variables from dataframe
+            x = species_df[var1]
+            y = species_df[var2]
+
+            # plot using matplotlibs scatter() method
+            ax.scatter(x, y, alpha=0.6, color=colors[i], label=species)
+
+        # decorate the plot
+        ax.set_xlabel(var1)
+        ax.set_ylabel(var2)
+        #ax.set_title("Iris Dataset")
+
+        # add grid to plot
+        ax.grid(True)
+        
+        # add legend
+        ax.legend()
+
+        # save plot as png
+        ax.get_figure().savefig(f"plots/{var1}_vs_{var2}_scatter_by_species.png")
+
+        # display the whole figure
+        #plt.show()
+        # close figures
+        plt.close()
+
+###########################################################
+
 
 # scatterplots using seaborns lmplot() method
 
