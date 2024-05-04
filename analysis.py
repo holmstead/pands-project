@@ -10,6 +10,8 @@ import seaborn as sns               # more plotting
 import sys
 import numpy as np                  # for line of best fit on scatterplot 
 
+import an                           # import custom module
+
 # check if two arguments given
 if len(sys.argv) != 2:
     print("Usage: python analysis.py <filename>\nExiting.")
@@ -28,6 +30,7 @@ else:
 
 # load specified csv into a pandas dataframe [1]
 df = pd.read_csv(sys.argv[1])
+
 
 # print head and tail of the dataframe
 print(f"\nDataframe head and tail:\n {df}")
@@ -73,58 +76,34 @@ with open("variables_summary.txt", "w") as f:
 os.makedirs("plots", exist_ok=True)
 
 
+##################################################################
+
+## BARCHARTS
+
+# call function to create barchart from a pivot table, with species as index
+an.plot_pivot(df, "species")
+
+
+#############################################################
+
 ## HISTOGRAMS 
 
 # https://realpython.com/python-histograms/
 
-
 # plot the entire dataframe using pandas built in hist() method
-
-# set up the canvas
-# (N, n) sets how many subplots: (N row, n columns, figuresize)
-# testing how to adjust figure size for nice readme.md
-fig, ax = plt.subplots(1, 1, figsize=(5, 5)) 
-
-# plot histogram using pandas built in hist()
-df.hist(bins=10, ax=ax) 
-# df.plot.hist() puts them all on one figure, its a mess
-# https://stackoverflow.com/questions/57008086/df-hist-vs-df-plot-hist
-# "They do different things, df.hist() will produce a separate plot for each Series whilst df.plot.hist() will produce a stacked single plot"
-# ax = df.hist() doesnt work for some reason
-
-# save plot as png
-ax.get_figure().savefig(f"plots/df.hist.png")
-plt.tight_layout()
-#plt.show()
-plt.close()
+an.plot_hist_entire_df(df)
 
 #############################################################
 
 
-# create loop to cycle through variables and plot hist using matplotlib
+# create loop to cycle through variables and plot a histogram
+# of each variable using matplotlib
 
 # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html
 
 for var in numeric_headers_list:
-    # set up the canvas
-    # (N, n) sets how many subplots: N row, n columns
-    fig, ax = plt.subplots(1, 1) 
+    an.plot_hist(df, var)
 
-    # matplotlibs hist function takes the df as an arg
-    ax.hist(df[var], bins=10, edgecolor="black")
-
-    # decorate the plot
-    ax.set_xlabel("Value")
-    ax.set_ylabel("Frequency")
-    ax.set_title(f"Histogram of {var}, species=all")
-
-    # save plot as png
-    ax.get_figure().savefig(f"plots/histogram_of_{var}_species=all_using_matplotlib.png")
-
-    # display the whole figure
-    #plt.show()
-    # close figures
-    plt.close()
 
 #############################################################
 
@@ -465,7 +444,17 @@ for var1 in numeric_headers_list:
             y = species_df[var2]
 
             # plot using matplotlibs scatter() method
-            ax.scatter(x, y, alpha=0.6, color=colors[i], label=species)
+            ax.scatter(x, y, alpha=0.6, color=colors[i])#, label=species)
+
+            # determine line of best fit using polyfit()
+            # https://numpy.org/doc/stable/reference/generated/numpy.polyfit.html
+            # https://stackoverflow.com/questions/19068862/how-to-overplot-a-line-on-a-scatter-plot-in-python
+            m, c = np.polyfit(x, y, 1)
+
+            # add line of best fit to plot
+            # use y=mx+c 
+            ax.plot(x, m*x+c, color=colors[i], label=f"{species}; y = {m:.2f}x + {c:.2f}")
+            
 
         # decorate the plot
         ax.set_xlabel(var1)
