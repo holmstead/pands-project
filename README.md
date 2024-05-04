@@ -17,10 +17,20 @@ The datset used in this analysis can be found here:
  
  - https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv
 
+The program was written in Python using VSCode, a free open-source Integrated Development Environment (IDE).
+
+Several ibraries were used that are not part of the Python Standard Library and must be downloaded seperately. Instructions on how to install these libraries can be found in the Get Started section.
+
+There is an online repository called the Python Package Index (PyPI) which helps find and install packages developed by the Python community.
+
+    https://pypi.org/
+
 
 ## About
 
 This program reads in a dataset (csv) and summarizes numerical variables, plots histograms, scatterplots, etc.
+
+**elaborate on the difference between a dataframe and a series.
 
 This program can be used to analyse ~~any dataset~~ the Iris dataset in csv form. Currently, it will:
 
@@ -40,19 +50,29 @@ Histograms are useful for visualizing distributions.
 
 Kernel Density Estimates are related to histograms
 
+Should try next to make create functions and put them in a module file
+
+- https://docs.python.org/3/tutorial/modules.html
+
+
 ## Quickstart
 
 Install stuff:
 
 ```
 python pip install pandas matplotlib seaborn os
+```
+
+Clone the repo:
+
+```
 git clone https://github.com/holmstead/pands-project.git
 ```
 
 Run the program:
-git push
+
 ```
-python analysis.py example_dataset.csv
+python analysis.py iris.csv
 ```
 
 
@@ -61,27 +81,34 @@ python analysis.py example_dataset.csv
 Requirements:
 
 - Python 3.x
-- pandas
+- Pandas
 - matplotlib
-- seaborn
+- Seaborn
+- NumPy
 - os
 
 Python is a general purpose programming language. The Python interperter can be downloaded [here](https://www.python.org/downloads/).
 
-1. Install `pandas`
+More information about the libraries used in this analysis can be found below:
+
+1. Pandas
     - https://pandas.pydata.org/
 
-2. Install `matplotlib`
+2. NumPy
+    - https://numpy.org/
+
+3. Matplotlib
     - https://matplotlib.org/
 
-3. Install `seaborn`
+4. Seaborn
     - https://seaborn.pydata.org/
+
 
 
 Once everything is installed, run the following command in the console: 
 
 ```
-python analysis.py example_dataset.csv
+python analysis.py iris.csv
 ```
 
 
@@ -89,7 +116,25 @@ python analysis.py example_dataset.csv
 
 The idea is to churn out heaps of plots, then decide which ones to present.
 
-**elaborate on the difference between a dataframe and a series.
+Pandas can create a load of types of plots:
+
+- https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html#visualization-scatter-matrix
+
+
+
+Pivot table and calculate mean on the aggregate. 
+
+- https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
+
+We can use pandas plot() function and specify barchart:
+
+- https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html
+
+Standard deviation can be calculated and errorbars plotted on the barchart, uses groupby(). yerr is a parameter in the plot function
+
+- https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html#visualization-errorbars
+
+![barchart_pivot](./plots/pivot_barchart.png)
 
 Pandas built-in hist method can give overview of dataframe:
 
@@ -97,7 +142,7 @@ Pandas built-in hist method can give overview of dataframe:
 
 We can plot histograms of individual variables e.g. petal length (these are called a Series) from the dataframe:
 
-![hist](./plots/histogram_of_petal_length_using_matplotlib.png)
+![hist](./plots/histogram_of_petal_length_species=all_using_matplotlib.png)
 
 Pandas has built in hist method. Can select how many bins too in both methods.
 
