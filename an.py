@@ -62,7 +62,7 @@ def plot_hist(df, var):
     fig, ax = plt.subplots(1, 1) 
 
     # matplotlibs hist function takes a Series as an arg
-    ax.hist(df[var], bins=10, edgecolor="black")
+    ax.hist(df[var], bins=20, edgecolor="black")
 
     # decorate the plot
     ax.set_xlabel("Value")
@@ -73,6 +73,30 @@ def plot_hist(df, var):
     ax.get_figure().savefig(f"plots/histogram_of_{var}_species=all_using_matplotlib.png")
 
     # display the whole figure
-    plt.show()
+    #plt.show()
     # close figures
+    plt.close()
+
+
+def plot_hist_by_species(df, var, species):
+    # plot histogram for a given variable for each species 
+    # group by species
+    attribute_by_species = df.groupby("species")[var]
+
+    # get the data for the specified species
+    species_to_plot = attribute_by_species.get_group(species)
+
+    # set up canvas
+    fig, ax = plt.subplots(1, 1) 
+
+    ax.hist(species_to_plot, bins=10, rwidth=1, edgecolor='black')
+    # decorate plot
+    ax.set_xlabel('Value')
+    ax.set_ylabel('Frequency')
+    ax.set_title(f'Histogram of {var} - {species}')
+
+    # save plot as png
+    ax.get_figure().savefig(f"plots/histogram_of_{var}_by_species_using_matplotlib.png")
+
+    plt.show()
     plt.close()
