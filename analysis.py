@@ -96,45 +96,14 @@ an.plot_hist_entire_df(df)
 #############################################################
 
 
-# create loop to cycle through variables and plot a histogram
-# of each variable using matplotlib
+# create loop to cycle through variables and plot histograms 
 
 # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html
 
 for var in numeric_headers_list:
+    # plot a histogram of each variable using matplotlib
     an.plot_hist(df, var)
 
-
-#############################################################
-
-
-# plot histogram for a given variable for each species
-
-for var in numeric_headers_list:
-    
-    # group by species
-    attribute_by_species = df.groupby('species')[var]
-
-    # specify the species to plot
-    species = 'setosa'
-
-    # get the data for the specified species
-    species_to_plot = attribute_by_species.get_group(species)
-
-    # set up canvas
-    fig, ax = plt.subplots(1, 1) 
-
-    ax.hist(species_to_plot, edgecolor='black')
-    # decorate plot
-    ax.set_xlabel('Value')
-    ax.set_ylabel('Frequency')
-    ax.set_title(f'Histogram of {var} - {species}')
-
-    # save plot as png
-    ax.get_figure().savefig(f"plots/histogram_of_{var}_by_species_using_matplotlib.png")
-
-    #plt.show()
-    plt.close()
 
 #############################################################
 
@@ -142,7 +111,7 @@ for var in numeric_headers_list:
 # plot histograms of a Series for each unique species
 
 # get unique species values and put in a list
-unique_species_list = df['species'].unique()
+unique_species_list = df["species"].unique()
 print(f"Unique species list: {unique_species_list}")
 
 # start outer for loop
@@ -150,26 +119,7 @@ for var in numeric_headers_list:
     
     # inner loop through species in unique species list
     for species in unique_species_list:
-        #print(f"\nPlotting histograms for {var} by {species}")
-        var_by_species = df.groupby('species')[var]
-        
-        # get the data for the specified species
-        species_to_plot = var_by_species.get_group(species)
-
-        # set up canvas
-        fig, ax = plt.subplots(1, 1) 
-
-        ax.hist(species_to_plot, edgecolor='black')
-        # decorate plot
-        ax.set_xlabel('Value')
-        ax.set_ylabel('Frequency')
-        ax.set_title(f'Histogram of {var} - {species}')
-
-        # save plot as png
-        ax.get_figure().savefig(f"plots/histogram_of_{var}_species={species}_using_matplotlib.png")
-
-        #plt.show()
-        plt.close()
+        an.plot_hist_by_species(df, var, species)
 
 
 
