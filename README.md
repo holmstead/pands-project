@@ -46,13 +46,46 @@ This program can be used to analyse ~~any dataset~~ the Iris dataset in csv form
 
 This will create a _lot_ of plots in the 'plots' directory. You can then weed out the plots that you dont need or like. Next feature to add is checking if the plot is worth plotting or not, maybe add a R^2 check or something ...
 
+Before plotting, check if plots dir exists
+
+- https://www.w3schools.com/python/ref_os_makedirs.asp
+
 Histograms are useful for visualizing distributions.
 
-Kernel Density Estimates are related to histograms
+- https://realpython.com/python-histograms/
+
+Matplot is used to plot histograms:
+
+- https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html
+
+Histogram grouped by species:
+
+- https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html
+    
+
+Kernel Density Estimates are related to histograms.
+
+- https://en.wikipedia.org/wiki/Kernel_density_estimation
+
+ Seaborn is used to plot KDE
+
+- https://seaborn.pydata.org/generated/seaborn.kdeplot.html
 
 Should try next to make create functions and put them in a module file
 
 - https://docs.python.org/3/tutorial/modules.html
+
+Scatterplots
+
+- https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
+
+Pairplot plots "pairwise relationships in a dataset." 
+
+- https://seaborn.pydata.org/generated/seaborn.pairplot.html
+
+Heatmaps
+
+- https://seaborn.pydata.org/generated/seaborn.heatmap.html
 
 
 ## Quickstart
@@ -121,7 +154,6 @@ Pandas can create a load of types of plots:
 - https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html#visualization-scatter-matrix
 
 
-
 Pivot table and calculate mean on the aggregate. 
 
 - https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html
@@ -138,17 +170,13 @@ Standard deviation can be calculated and errorbars plotted on the barchart, uses
 
 Pandas built-in hist method can give overview of dataframe:
 
-![df.hist](./plots/df.hist.png)
+![df.hist](./plots/df_hist.png)
 
 We can plot histograms of individual variables e.g. petal length (these are called a Series) from the dataframe:
 
-![hist](./plots/histogram_of_petal_length_species=all_using_matplotlib.png)
+![hist](./plots/petal_length_hist.png)
 
-Pandas has built in hist method. Can select how many bins too in both methods.
-
-![hist](./plots/histogram_of_petal_length_using_pandas.png)
-
-Combining the histograms of ecah of the variables onto one figure gives us a better overview of the dataset:
+Pandas has built in hist method. Can select how many bins too in both methods. Combining the histograms of ecah of the variables onto one figure gives us a better overview of the dataset:
 
 ![combined_hist](./plots/combined_histogram_of_variables_using_pandas.png)
 
@@ -156,7 +184,7 @@ Thats still not showing us by species though, thats for all species in the dataf
 
 We can group them using pandas and groupby() method:
 
-![grouped_hist](./plots/histogram_of_petal_length_grouped_by_species.png)
+![grouped_hist](./plots/petal_length_grouped_by_species_hist.png)
 
 We can put the grouped histograms of each variable onto one figure also. Had to make the figure larger to accomodate the titles ...
 
@@ -167,23 +195,20 @@ KDE plots are related to histograms:
 ![kde](./plots/kde_petal_length_species_seaborn.png)
 
 
-Matplotlib basic scatterplot of two variables:
+Matplotlib scatterplot of two variables. Coloured by species. Added a line of best fit using polyfit(), and displayed the equation of the line in the legend.
 
 ![matscatter](./plots/sepal_width_vs_petal_length_scatter.png)
 
-We can't tell which species or anything though.
-
-Seaborn has a function called lmplot for scatterplots. We can see now three lines of best fir, by species:
-
-![lmplot](./plots/sepal_width_vs_petal_length_lmplot_species.png)
 
 Pairplots combine a lot of useful visuals into one easy to create figure:
+
+- https://seaborn.pydata.org/generated/seaborn.pairplot.html
 
 ![pairplot](./plots/pairplot_by_species.png)
 
 Heatmaps are class
 
-![heatmap](./plots/heatmap.png)
+![heatmap](./plots/df_heatmap.png)
 
 ##  Contribute
 
