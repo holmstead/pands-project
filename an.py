@@ -2,9 +2,9 @@
 
 import pandas as pd                 # for data analyis
 import matplotlib.pyplot as plt     # for plotting
-import os                           # checking if directory exists
+#import os                           # checking if directory exists
 import seaborn as sns               # more plotting
-import sys
+#import sys
 import numpy as np                  # for line of best fit on scatterplot 
 
 
@@ -35,20 +35,18 @@ def plot_pivot(df, index):
 
 
 def plot_hist_entire_df(df):
-    # set up the canvas
     # (N, n) sets how many subplots: (N row, n columns, figuresize)
-    # testing how to adjust figure size for nice readme.md
     fig, ax = plt.subplots(1, 1, figsize=(5, 5)) 
 
     # plot histogram using pandas built in hist()
-    df.hist(bins=10, ax=ax) 
+    df.hist(bins=10)        # note: doesnt take ax=ax
     # df.plot.hist() puts them all on one figure, its a mess
     # https://stackoverflow.com/questions/57008086/df-hist-vs-df-plot-hist
     # "They do different things, df.hist() will produce a separate plot for each Series whilst df.plot.hist() will produce a stacked single plot"
     # ax = df.hist() doesnt work for some reason
 
     # save plot as png
-    ax.get_figure().savefig(f"plots/df_hist.png")
+    plt.savefig("plots/df_hist.png")
     plt.tight_layout()
     #plt.show()
     plt.close()
@@ -101,8 +99,9 @@ def plot_hist_by_species(df, var, species):
 
 
 def plot_pands_hist_by_species(df, var):
-    # plot histograms of each attriubte, colored by species
-    print(f"\nPlotting histograms grouping by {var} using pandas.")
+    '''
+    This function plots histograms of each numeric variable, colored by species
+    '''
     
     # set up the canvas
     fig, ax = plt.subplots(1, 1)
@@ -160,6 +159,9 @@ def plot_kde_by_species(df, var):
 
 
 def plot_scatter(df, var1, var2, groups):
+    '''
+    This function creates scattetrplots for each variable, coloured by species. A line of best fit is added, and equation of the line.
+    '''
     # set up the canvas (N rows, n columns)
     fig, ax = plt.subplots(1, 1) 
 
@@ -167,7 +169,7 @@ def plot_scatter(df, var1, var2, groups):
     for i, species in enumerate(groups):
 
         # create a new df from filtering
-        species_df = df[df['species'] == species]
+        species_df = df[df["species"] == species]
 
         # assign variables from dataframe
         x = species_df[var1]
@@ -202,15 +204,41 @@ def plot_scatter(df, var1, var2, groups):
     plt.close()
 
 
+def plot_heatmap(df):
+    '''
+    This function plots a heatmap for all species in the df combined.
+    '''
+    # set up canvas
+    fig, ax = plt.subplots(1, 1) 
+    
+    # ensure the filtered DataFrame contains numeric columns for correlation calculation
+    numeric_df = df.select_dtypes(include="number")
+
+     # calculate the correlation matrix
+    corr = numeric_df.corr()
+    
+    # plot the heatmap using seaborn
+    sns.heatmap(corr, annot=True)
+
+    # save the plot as png
+    plt.savefig(f"plots/df_heatmap.png")
+
+    #plt.show()
+    plt.close()
+
+
 def plot_heatmap_by_species(df, species):
+    '''
+    This function plots a heatmap for each individual species.
+    '''
     # set up canvas
     fig, ax = plt.subplots(1, 1) 
     
     # filter the DataFrame by the current species
-    species_df = df[df['species'] == species]
+    species_df = df[df["species"] == species]
 
     # Ensure the filtered DataFrame contains numeric columns for correlation calculation
-    numeric_species_df = species_df.select_dtypes(include='number')
+    numeric_species_df = species_df.select_dtypes(include="number")
 
      # calculate the correlation matrix
     corr = numeric_species_df.corr()
@@ -221,14 +249,14 @@ def plot_heatmap_by_species(df, species):
     # save the plot as png
     plt.savefig(f"plots/{species}_heatmap.png")
 
-    plt.show()
+    #plt.show()
     plt.close()
 
 
 def plot_pairplot(df, hue):
-    # plot a grid of scatter plots using seaborn [4]
-    # https://seaborn.pydata.org/generated/seaborn.pairplot.html
-    print(f"\nCreating pairplot using {hue} as hue")
+    '''
+     This function plots a grid of scatter plots using seaborn
+    ''' 
 
     # set up the canvas
     fig, ax = plt.subplots(1, 1) 
@@ -243,13 +271,13 @@ def plot_pairplot(df, hue):
     plt.close()
 
 
-def plot_hist_subplots(df, numeric_headers_list):
-    # create a loop to plot a histogram of every numeric variable 
-    # using pandas built in hist() method and PLOT ALL ON ONE FIGURE
+def plot_hist_subplots(df, numeric_variables_list):
+    '''
+    This function loops through the subplots and plots a histogram of every numeric variable using pandas built in hist() method, combining them all on one figure.
+    '''
     # set up the canvas BEFORE the for loop
     # (N, n) sets how many subplots: N row, n columns
     fig, ax = plt.subplots(2, 2)
-
 
     # now start the loop
     # add enumerate feature so we number each variable as we iterate through 1-4
@@ -259,25 +287,53 @@ def plot_hist_subplots(df, numeric_headers_list):
         # plot a histogram of the specified variable in the df
         #print(f"\nPlotting histogram of {variable} using pandas")
         # create a hist from a given column in the df using df["sepal_length"] for example
-        df[numeric_headers_list[i]].plot.hist(bins=30, color="green", edgecolor="black", ax=ax)
+        df[numeric_variables_list[i]].plot.hist(bins=30, color="green", edgecolor="black", ax=ax)
 
         # decorate the plot
         ax.set_xlabel("Value")
         ax.set_ylabel("Frequency")
-        ax.set_title(f"Histogram of {numeric_headers_list[i]}")
+        ax.set_title(f"Histogram of {numeric_variables_list[i]}")
 
         # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html
-        # Hide x labels and tick labels for top plots and y ticks for right plots.
-        ax.label_outer() # straight from matplotlib
-
-
+        # straight from matplotlib: "Hide x labels and tick labels for top plots and y ticks for right plots.""
+        #ax.label_outer()
 
     # auto adjust layout before saving
     plt.tight_layout()
     # save plot as png
     plt.savefig(f"plots/combined_histogram_of_variables_using_pandas.png")
 
-    # display the whole figure
-    plt.show()
-    # close figures
+    #plt.show()
+    plt.close()
+
+
+def plot_grouped_hist_subplots(df, numeric_variables_list):
+    # set up canvas
+    fig, ax = plt.subplots(2, 2, figsize=(12,10))
+    # have to flatten 2x2 to 1x4 so we can iterate over it 
+    # https://numpy.org/doc/stable/reference/generated/numpy.ndarray.flatten.html
+
+    for i, ax in enumerate(ax.flat):
+        #print(f"\nPlotting histograms grouping by {variable} using pandas.")
+        
+        # group by species using groupby() method, and filter by 'variable'
+        group = df.groupby("species")[numeric_variables_list[i]]
+
+        # plot the group
+        group.hist(bins=10, alpha=0.5, ax=ax)
+
+        # decorate plot
+        ax.set_xlabel(numeric_variables_list[i])
+        ax.set_ylabel("Frequency")
+        ax.set_title(f"Histogram of {numeric_variables_list[i]}")
+
+        #ax.label_outer()
+
+    # specify where legend is using loc and bbox_to_anchor()
+    # https://matplotlib.org/stable/users/explain/axes/legend_guide.html
+    plt.legend(group.groups.keys(), loc="upper left", bbox_to_anchor=(1, 1))   
+    plt.tight_layout()
+    # save png
+    plt.savefig(f"plots/combined_hist_of_variables_grouped_by_species.png", bbox_inches="tight")
+    #plt.show()
     plt.close()
