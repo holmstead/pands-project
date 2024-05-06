@@ -7,16 +7,15 @@ import pandas as pd                 # for data analyis
 import matplotlib.pyplot as plt     # for plotting
 import os                           # checking if directory exists
 #import seaborn as sns               # more plotting
-import sys                          # ends program if not enough args given
+import sys                          # taking arguements from commadn line 
 #import numpy as np                  # for line of best fit on scatterplot 
 import an                           # import custom module
 
 
 # check if two arguments given
 if len(sys.argv) != 2:
-    print("Usage: python analysis.py <filename>\nExiting.")
     # kill the program if we didnt get 2 args
-    sys.exit(1)
+    raise SystemExit("Usage: python analysis.py <filename>\nExiting.")
 # handle file not found exception
 else:
     try:
@@ -24,8 +23,8 @@ else:
             # file found ok so pass 
             pass
     except FileNotFoundError:
-        print("File not found.\nExiting.", end="\n")
-        sys.exit(1)
+        raise SystemExit("File not found.\nExiting.")
+
 
 
 # load specified csv into a pandas dataframe [1]
