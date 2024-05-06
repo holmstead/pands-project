@@ -1,5 +1,5 @@
 '''
-This program reads in a dataset (csv) and summarizes numerical variables, 
+This program reads in the iris dataset (csv) and summarizes numerical variables, 
 plots histograms, scatterplots, etc.
 '''
 
@@ -26,8 +26,7 @@ else:
         raise SystemExit("File not found.\nExiting.")
 
 
-
-# load specified csv into a pandas dataframe [1]
+# load specified csv into a pandas dataframe
 df = pd.read_csv(sys.argv[1])
 
 # print head and tail of the dataframe
@@ -83,27 +82,18 @@ an.plot_pivot(df, "species")
 
 ## HISTOGRAMS & KDE PLOTS
 
-# https://realpython.com/python-histograms/
-
-# what are kernel density plots:
-# https://en.wikipedia.org/wiki/Kernel_density_estimation
-
 # plot the entire dataframe using pandas built in hist() method
 an.plot_hist_entire_df(df)
 
 # plot KDE of entire df using seaborn
-# https://seaborn.pydata.org/generated/seaborn.kdeplot.html
 an.plot_kde(df)
 
-
 # create loop to cycle through variables and plot histograms 
-# https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html
 for var in numeric_variables_list:
     # plot a histogram of each variable using matplotlib
     an.plot_hist(df, var)
     
     # create histograms grouped by species using pandas hist() and groupby()
-    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html
     an.plot_pands_hist_by_species(df, var)
 
     # plot KDE using seaborn but using species as hue
@@ -153,26 +143,8 @@ for hue in categorical_variables_list:
 # loop through species in unique species list
 for species in unique_species_list:
     # plot heatmap for each species
-    # https://seaborn.pydata.org/generated/seaborn.heatmap.html
     an.plot_heatmap_by_species(df, species)
 
 
 # END
 print(f"\nAnalysis complete.")
-
-
-'''
-References:
-
-[1] https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv
-
-[2] https://www.w3schools.com/python/ref_os_makedirs.asp
-
-[3] https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html
-
-[4] Pairplot plots "pairwise relationships in a dataset." 
-https://seaborn.pydata.org/generated/seaborn.pairplot.html
-
-[a] 
-
-'''
