@@ -6,7 +6,7 @@ plots histograms, scatterplots, etc.
 import pandas as pd                 # for data analyis
 import matplotlib.pyplot as plt     # for plotting
 import os                           # checking if directory exists
-import seaborn as sns               # more plotting
+#import seaborn as sns               # more plotting
 import sys                          # ends program if not enough args given
 #import numpy as np                  # for line of best fit on scatterplot 
 import an                           # import custom module
@@ -46,14 +46,14 @@ numeric_df = df.select_dtypes(include="number")
 #print(numeric_df)
 
 # make a list from numeric_df variables
-numeric_headers_list = numeric_df.columns.tolist()
-print(f"\nNumeric column headers: {numeric_headers_list}")
+numeric_variables_list = numeric_df.columns.tolist()
+print(f"\nNumeric column headers: {numeric_variables_list}")
 
 
 # create df from non-numeric dtypes and make list of headers
 non_numeric_df = df.select_dtypes(exclude="number")
-non_numeric_headers_list = non_numeric_df.columns.tolist()
-print(f"\nNon-numeric column headers: {non_numeric_headers_list}")
+categorical_variables_list = non_numeric_df.columns.tolist()
+print(f"\nNon-numeric column headers: {categorical_variables_list}")
 
 
 # get unique species values and put in a list
@@ -99,7 +99,7 @@ an.plot_kde(df)
 
 # create loop to cycle through variables and plot histograms 
 # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html
-for var in numeric_headers_list:
+for var in numeric_variables_list:
     # plot a histogram of each variable using matplotlib
     an.plot_hist(df, var)
     
@@ -117,64 +117,20 @@ for var in numeric_headers_list:
         an.plot_hist_by_species(df, var, species)
 
 
-# need to figure out how to put those 4 histograms onto one figure
-# https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html
-# using ax=ax[0], ax[1] or something
-
-
 # plot a histogram of every numeric variable 
 # using pandas built in hist() method and PLOT ALL ON ONE FIGURE
-an.plot_hist_subplots(df, numeric_headers_list)
-
-
-########################################################
+an.plot_hist_subplots(df, numeric_variables_list)
 
 
 # create histograms grouped by species using pandas hist() and groupby()
 # and plot all 4 on one figure
-# set up canvas
-fig, ax = plt.subplots(2, 2, figsize=(12,10))
-# have to flatten 2x2 to 1x4 so we can iterate over it 
-# https://numpy.org/doc/stable/reference/generated/numpy.ndarray.flatten.html
-#ax = ax.flatten()
-ax = ax.flatten()
-for i, variable in enumerate(numeric_headers_list):
-    print(f"\nPlotting histograms grouping by {variable} using pandas.")
-    
-    # group by species using groupby() method, and filter by 'variable'
-    group = df.groupby("species")[variable]
-
-    # plot the group
-    group.hist(bins=10, alpha=0.5, ax=ax[i])
-
-    # decorate plot
-    ax[i].set_xlabel(variable)
-    ax[i].set_ylabel("Frequency")
-    ax[i].set_title(f"Histogram of {variable}")
-
-# specify where legend is using loc and bbox_to_anchor()
-# https://matplotlib.org/stable/users/explain/axes/legend_guide.html
-plt.legend(group.groups.keys(), loc="upper left", bbox_to_anchor=(1, 1))   
-plt.tight_layout()
-# save png
-plt.savefig(f"plots/combined_hist_of_variables_grouped_by_species.png", bbox_inches="tight")
-#plt.show()
-plt.close()
+an.plot_grouped_hist_subplots(df, numeric_variables_list)
 
 
-
-
-###############################################################################
-
-
-## SCATTERPLOTS
-
-# scatterplot using matplotlib but with color by species
-# with line of best fit and equation in legend
-
+# SCATTERPLOTS
 # nested loop through variables to get two variables for scatter
-for var1 in numeric_headers_list:
-    for var2 in numeric_headers_list:
+for var1 in numeric_variables_list:
+    for var2 in numeric_variables_list:
         # check if variable names match from both loops
         if var1 == var2:
             print(f"\nNot plotting {var1} against {var2}")
@@ -184,18 +140,17 @@ for var1 in numeric_headers_list:
         # if they dont match, then they get plotted against each other
         # define functions
 
-        # create scatter plot
+        # create scatter plot using matplotlib, coloured by species
         an.plot_scatter(df, var1, var2, groups=unique_species_list)
 
-###########################################################
-   
 
-# pairplots using seaborns pairplot() method
-for hue in non_numeric_headers_list: 
+# PAIRPLOT
+# create pairplot using seaborns pairplot() method
+for hue in categorical_variables_list: 
     an.plot_pairplot(df, hue)
 
-#########################################################
 
+# HEATMAP
 # loop through species in unique species list
 for species in unique_species_list:
     # plot heatmap for each species
@@ -203,8 +158,7 @@ for species in unique_species_list:
     an.plot_heatmap_by_species(df, species)
 
 
-
-## END
+# END
 print(f"\nAnalysis complete.")
 
 
