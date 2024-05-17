@@ -4,11 +4,8 @@ plots histograms, scatterplots, etc.
 '''
 
 import pandas as pd                 # for data analyis
-import matplotlib.pyplot as plt     # for plotting
 import os                           # checking if directory exists
-#import seaborn as sns               # more plotting
 import sys                          # taking arguements from commadn line 
-#import numpy as np                  # for line of best fit on scatterplot 
 import an                           # import custom module
 
 
@@ -75,13 +72,13 @@ os.makedirs("plots", exist_ok=True)
 
 
 ## BARCHARTS
-
+print(f"\nCreating barcharts ...")
 # call function to create barchart from a pivot table, with species as index
 an.plot_pivot(df, "species")
 
 
 ## HISTOGRAMS & KDE PLOTS
-
+print(f"\nCreating histograms and KDE plots ...")
 # plot the entire dataframe using pandas built in hist() method
 an.plot_hist_entire_df(df)
 
@@ -105,6 +102,9 @@ for var in numeric_variables_list:
         # plot histograms of a Series for each unique species
         an.plot_hist_by_species(df, var, species)
 
+        # plot combined histogram and kde on one fig
+        an.plot_displot(df, var, species)
+
 
 # plot a histogram of every numeric variable 
 # using pandas built in hist() method and PLOT ALL ON ONE FIGURE
@@ -117,32 +117,35 @@ an.plot_grouped_hist_subplots(df, numeric_variables_list)
 
 
 # SCATTERPLOTS
+print(f"\nScatter plotting ...")
 # nested loop through variables to get two variables for scatter
 for var1 in numeric_variables_list:
     for var2 in numeric_variables_list:
         # check if variable names match from both loops
         if var1 == var2:
-            print(f"\nNot plotting {var1} against {var2}")
             #skip this loop in the for loop if the two variable names match
             continue
-        print(f"\nScatter plotting {var1} v {var2} using matplotlib")
+        
         # if they dont match, then they get plotted against each other
-        # define functions
-
         # create scatter plot using matplotlib, coloured by species
         an.plot_scatter(df, var1, var2, groups=unique_species_list)
 
 
 # PAIRPLOT
+print(f"\nCreating pairplots ...")
 # create pairplot using seaborns pairplot() method
 for hue in categorical_variables_list: 
     an.plot_pairplot(df, hue)
 
 
-# HEATMAP
+# HEATMAPS
+print(f"\nCreating heatmaps ...")
+# plot heatmap for all species
+an.plot_heatmap(df)
+
 # loop through species in unique species list
 for species in unique_species_list:
-    # plot heatmap for each species
+    # plot heatmap for each individual species
     an.plot_heatmap_by_species(df, species)
 
 
