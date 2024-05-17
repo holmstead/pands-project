@@ -186,7 +186,7 @@ The equation of the line of best fit is added to the legend.
 Heatmaps visualise correlations between variables using color gradient, these can be created using Seaborns [heatmap()](https://seaborn.pydata.org/generated/seaborn.heatmap.html
 ) function. Before plotting the heatmap, the correlation between each variable is calculated using Pandas' [corr()](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.corr.html) function.
 
-Heatmap for the Setosa species:
+Heatmap for the Setosa species is shown below, with lighter colours (closer to 1) signifying a greater correlation between the two variables:
 
 ![heatmap](./plots/setosa_heatmap.png)
 
@@ -198,9 +198,8 @@ Seaborns [displot()](https://seaborn.pydata.org/generated/seaborn.displot.html
 
 ![kde/hist](./plots/petal_length_hist_kde_setosa.png)
 
-Pairplots combine a lot of useful visuals into one easy to create figure:
+The [pairplots()](https://seaborn.pydata.org/generated/seaborn.pairplot.html) function combines a lot of useful visuals into one easy to create figure:
 
-- https://seaborn.pydata.org/generated/seaborn.pairplot.html
 
 Pairplot plots "pairwise relationships in a dataset." 
 
