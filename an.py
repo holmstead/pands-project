@@ -1,49 +1,57 @@
-# this module contains fucntions used in analysis.py
+# this module contains functions used in analysis.py
 
 import pandas as pd                 # for data analyis
 import matplotlib.pyplot as plt     # for plotting
-#import os                           # checking if directory exists
 import seaborn as sns               # more plotting
-#import sys
-import numpy as np                  # for line of best fit on scatterplot 
+import numpy as np                  # for line of best fit 
 
 
-def plot_pivot(df, index):
+def plot_pivot(df, var):
+    '''
+    This function creates a pivot table, calculates the mean, and plots a barchart with std deviation error bars.
+    '''
+
     # create a pivot table, with given arguement (species) as index
     # then get the mean for each variable grouped by species
-    pivot_table_df = pd.pivot_table(df, index=index, aggfunc="mean")
+    pivot_table_df = pd.pivot_table(df, index=var, aggfunc="mean")
 
     # have a look at the pivot table
     #print(pivot_table_df)
 
     # determine std deviation for variables grouped by each species
     # for error bars
-    std_dev = df.groupby("species").std()
+    std_dev = df.groupby(var).std()
 
     # set up the canvas
-    # (N, n) sets how many subplots: (N row, n columns, figuresize)
-    fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+    # (N, n) sets how many subplots: (N row, n columns, figuresize(x, y))
+    fig, ax = plt.subplots(1, 1, figsize=(6, 4))
 
     # plot barchart of the new df 
     pivot_table_df.plot(kind="bar", yerr=std_dev,capsize=4, ylabel="Mean (cm)", rot=0, ax=ax)
 
     # save plot as png
     ax.get_figure().savefig(f"plots/pivot_barchart.png")
+    # auto adjust plot layout
     plt.tight_layout()
     #plt.show()
     plt.close()
 
 
 def plot_hist_entire_df(df):
-    # (N, n) sets how many subplots: (N row, n columns, figuresize)
-    fig, ax = plt.subplots(1, 1, figsize=(5, 5)) 
+    '''
+    This function plots histograms of all numeric variables in tha dataframe.
+    '''
+
+    # set up canvas
+    fig, axes = plt.subplots(1, 1, figsize=(8, 6), sharex=True, sharey=True) 
 
     # plot histogram using pandas built in hist()
-    df.hist(bins=10)        # note: doesnt take ax=ax
-    # df.plot.hist() puts them all on one figure, its a mess
-    # https://stackoverflow.com/questions/57008086/df-hist-vs-df-plot-hist
-    # "They do different things, df.hist() will produce a separate plot for each Series whilst df.plot.hist() will produce a stacked single plot"
-    # ax = df.hist() doesnt work for some reason
+    df.hist(bins=10, ax=axes)   # ax=axes throws warning, but still works
+
+    # decorate the plot
+    plt.suptitle("Histograms, all species")
+    fig.text(0.5, 0.04, "Measurements / cm)", ha="center")
+    fig.text(0.04, 0.5, "Frequency", va="center", rotation="vertical")
 
     # save plot as png
     plt.savefig("plots/df_hist.png")
@@ -53,10 +61,11 @@ def plot_hist_entire_df(df):
 
 
 def plot_hist(df, var):
-    # plot hist using matplotlib
+    '''
+    This function plots a histogram for a given numerical variable.
+    '''
 
     # set up the canvas
-    # (N, n) sets how many subplots: N row, n columns
     fig, ax = plt.subplots(1, 1) 
 
     # matplotlibs hist function takes a Series as an arg
@@ -65,7 +74,7 @@ def plot_hist(df, var):
     # decorate the plot
     ax.set_xlabel("Value")
     ax.set_ylabel("Frequency")
-    ax.set_title(f"Histogram of {var}, species=all")
+    ax.set_title(f"Histogram of {var}, all species")
 
     # save plot as png
     ax.get_figure().savefig(f"plots/{var}_hist.png")
@@ -88,12 +97,40 @@ def plot_hist_by_species(df, var, species):
     ax.hist(species_to_plot, bins=10, rwidth=1, edgecolor='black')
 
     # decorate plot
-    ax.set_xlabel('Value')
-    ax.set_ylabel('Frequency')
-    ax.set_title(f'Histogram of {var} - {species}')
+    ax.set_xlabel("Value")
+    ax.set_ylabel("Frequency")
+    ax.set_title(f"Histogram of {var} - {species}")
 
     # save plot as png
     ax.get_figure().savefig(f"plots/{var}_{species}_hist.png")
+    #plt.show()
+    plt.close()
+
+
+def plot_displot(df, var, species):
+    '''
+    This function plots a combined histogram/kde for a given numerical variable using Seaborn.
+    '''
+
+    # plot histogram for a given variable for each species 
+    # group by species
+    variable_by_species = df.groupby("species")[var]
+
+    # get the data for the specified species
+    species_to_plot = variable_by_species.get_group(species)
+
+    # Seaborn's displot with kde and histogram combined
+    sns.displot(species_to_plot, kind="hist", bins=10, kde=True, edgecolor="black")
+    
+    # decorate the plot
+    plt.xlabel(f"{var} (cm)")
+    plt.ylabel("Frequency")
+    plt.title(f"hist/kde of {var}, {species}")
+
+    # save plot as png
+    plt.tight_layout()
+    plt.savefig(f"plots/{var}_hist_kde_{species}.png")
+    #plt.tight_layout()
     #plt.show()
     plt.close()
 
@@ -160,7 +197,7 @@ def plot_kde_by_species(df, var):
 
 def plot_scatter(df, var1, var2, groups):
     '''
-    This function creates scattetrplots for each variable, coloured by species. A line of best fit is added, and equation of the line.
+    This function creates scattetplots for each pair of variables, coloured by species. A line of best fit is added, and equation of the line.
     '''
     # set up the canvas (N rows, n columns)
     fig, ax = plt.subplots(1, 1) 
@@ -179,12 +216,11 @@ def plot_scatter(df, var1, var2, groups):
         ax.scatter(x, y, alpha=0.6, color=colors[i])#, label=species)
 
         # determine line of best fit using polyfit()
-        # https://numpy.org/doc/stable/reference/generated/numpy.polyfit.html
-        # https://stackoverflow.com/questions/19068862/how-to-overplot-a-line-on-a-scatter-plot-in-python
         m, c = np.polyfit(x, y, 1)
 
         # add line of best fit to plot
-        # use y=mx+c 
+        # use y=mx+c
+        # label is used to add the equation of the line to the legend
         ax.plot(x, m*x+c, color=colors[i], label=f"{species}; y = {m:.2f}x + {c:.2f}")
         
 
@@ -290,9 +326,9 @@ def plot_hist_subplots(df, numeric_variables_list):
         df[numeric_variables_list[i]].plot.hist(bins=30, color="green", edgecolor="black", ax=ax)
 
         # decorate the plot
-        ax.set_xlabel("Value")
+        ax.set_xlabel(f"{numeric_variables_list[i]} (cm)")
         ax.set_ylabel("Frequency")
-        ax.set_title(f"Histogram of {numeric_variables_list[i]}")
+        #ax.set_title(f"Histogram of {numeric_variables_list[i]}")
 
         # https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html
         # straight from matplotlib: "Hide x labels and tick labels for top plots and y ticks for right plots.""
@@ -323,9 +359,9 @@ def plot_grouped_hist_subplots(df, numeric_variables_list):
         group.hist(bins=10, alpha=0.5, ax=ax)
 
         # decorate plot
-        ax.set_xlabel(numeric_variables_list[i])
+        ax.set_xlabel(f"{numeric_variables_list[i]} (cm)")
         ax.set_ylabel("Frequency")
-        ax.set_title(f"Histogram of {numeric_variables_list[i]}")
+        #ax.set_title(f"Histogram of {numeric_variables_list[i]}")
 
         #ax.label_outer()
 
